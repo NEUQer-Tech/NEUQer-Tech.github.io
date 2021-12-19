@@ -3,5 +3,12 @@
         <title>Categories - 分类 - 不洗碗工作室公共博客</title>
         <link>http://example.org/categories/</link>
         <description>Categories - 分类 - 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /></channel>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /><item>
+    <title>入门教学</title>
+    <link>http://example.org/categories/%E5%85%A5%E9%97%A8%E6%95%99%E5%AD%A6/</link>
+    <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/categories/%E5%85%A5%E9%97%A8%E6%95%99%E5%AD%A6/</guid>
+    <description><![CDATA[]]></description>
+</item></channel>
 </rss>

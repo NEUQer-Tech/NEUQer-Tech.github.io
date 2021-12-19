@@ -1,9 +1,9 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>所有文章 - 不洗碗工作室公共博客</title>
-        <link>http://example.org/posts/</link>
-        <description>所有文章 | 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <title>入门教学 - 分类 - 不洗碗工作室公共博客</title>
+        <link>http://example.org/categories/%E5%85%A5%E9%97%A8%E6%95%99%E5%AD%A6/</link>
+        <description>入门教学 - 分类 - 不洗碗工作室公共博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%85%A5%E9%97%A8%E6%95%99%E5%AD%A6/" rel="self" type="application/rss+xml" /><item>
     <title>如何在公共博客上新增文章</title>
     <link>http://example.org/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/</link>
     <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
