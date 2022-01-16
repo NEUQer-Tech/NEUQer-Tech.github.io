@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Vue的组件式开发 - 不洗碗工作室公共博客</title><meta name="Description" content=""><meta property="og:title" content="Vue的组件式开发" />
+<meta property="og:description" content="Vue的组件化开发 作用 将大的系统拆解成小的组件 整个页面逻辑整体进行处理不利于后期的维护和扩展，因此可以将多个小功能块放到一起组成大的页面 也就" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-19T18:28:34+08:00" />
+<meta property="article:modified_time" content="2021-12-19T18:28:34+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Vue的组件式开发"/>
+<meta name="twitter:description" content="Vue的组件化开发 作用 将大的系统拆解成小的组件 整个页面逻辑整体进行处理不利于后期的维护和扩展，因此可以将多个小功能块放到一起组成大的页面 也就"/>
+<meta name="application-name" content="不洗碗工作室公共博客">
+<meta name="apple-mobile-web-app-title" content="不洗碗工作室公共博客"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/" /><link rel="prev" href="http://example.org/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/" /><link rel="next" href="http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Vue的组件式开发",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91\/"
+        },"genre": "posts","keywords": "技术分享, Vue","wordcount":  2739 ,
+        "url": "http:\/\/example.org\/posts\/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91\/","datePublished": "2021-12-19T18:28:34+08:00","dateModified": "2021-12-19T18:28:34+08:00","publisher": {
+            "@type": "Organization",
+            "name": "周卿玉"},"author": {
+                "@type": "Person",
+                "name": "周卿玉"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="不洗碗工作室公共博客">不洗碗工作室公共博客</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="不洗碗工作室公共博客">不洗碗工作室公共博客</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Vue的组件式开发</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/HCl0227" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>周卿玉</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/"><i class="far fa-folder fa-fw"></i>前端技术分享</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-19">2021-12-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2739 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#作用">作用</a></li>
+        <li><a href="#创建组件">创建组件</a></li>
+        <li><a href="#全局组件和局部组件">全局组件和局部组件</a></li>
+        <li><a href="#父组件和子组件">父组件和子组件</a></li>
+        <li><a href="#分离写法">分离写法</a></li>
+        <li><a href="#数据传递">数据传递</a></li>
+        <li><a href="#数据传递-1">数据传递</a></li>
+        <li><a href="#插槽slot">插槽slot</a></li>
+        <li><a href="#将组件抽取出来">将组件抽取出来</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="vue的组件化开发">Vue的组件化开发</h1>
+<h3 id="作用">作用</h3>
+<p>将大的系统拆解成小的组件</p>
+<p>整个页面逻辑整体进行处理不利于后期的维护和扩展，因此可以将多个小功能块放到一起组成大的页面</p>
+<p>也就是将大组件分成小组件，小组件再抽像
+其中小组件独立可复用</p>
+<h3 id="创建组件">创建组件</h3>
+<p>（这里是最基本的创建组件的方式）</p>
+<p>1.创建组件构造器    调用Vue.extend()</p>
+<p>2.注册组件   Vue.component()(全局组件）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">cpnC</span>  <span class="o">=</span> <span class="nx">Vue</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+             <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;&lt;h2&gt;标题&lt;/h2&gt;&lt;h4&gt;内容1&lt;/h4&gt;&lt;/div&gt;&#39;</span>
+        
+         <span class="p">})</span>
+         <span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="s1">&#39;my-cpn&#39;</span><span class="p">,</span><span class="nx">cpnC</span><span class="p">)</span>
+</code></pre></div><p>3.使用组件    在Vue示例的作用范围内使用组件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;</span>
+     <span class="p">&lt;</span><span class="nt">my-cpn</span><span class="p">&gt;&lt;/</span><span class="nt">my-cpn</span><span class="p">&gt;</span>    
+ <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div><p>组件可以在实例中使用，不能拿出来单独使用</p>
+<h3 id="全局组件和局部组件">全局组件和局部组件</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+             <span class="nx">el</span><span class="o">:</span><span class="s1">&#39;#app&#39;</span><span class="p">,</span>
+             <span class="nx">data</span><span class="o">:</span><span class="p">{</span>
+                 <span class="nx">message</span><span class="o">:</span><span class="s1">&#39;nihao&#39;</span><span class="p">,</span>
+             <span class="p">},</span>
+              <span class="nx">components</span><span class="o">:</span><span class="p">{</span>
+                <span class="c1">//  cpn：使用组件时的标签名
+</span><span class="c1"></span>                <span class="nx">cpn</span><span class="o">:</span><span class="nx">cpnC1</span> <span class="c1">//在这里注册的不是全局，只有一个能用
+</span><span class="c1"></span>             <span class="p">}</span>
+         <span class="p">})</span>
+         <span class="kr">const</span> <span class="nx">app2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+             <span class="nx">el</span><span class="o">:</span><span class="s1">&#39;#app2&#39;</span>
+         <span class="p">})</span>
+</code></pre></div><p>app2不能使用cpn</p>
+<h3 id="父组件和子组件">父组件和子组件</h3>
+<p>父组件里面可以有子组件</p>
+<p>Vue实例也可以看作是一个组件（root组件），也可以将vue组件看作其他组件的父组件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript">		<span class="c1">//第一个组件构造器（子组件）
+</span><span class="c1"></span>         <span class="kr">const</span> <span class="nx">cpnC1</span>  <span class="o">=</span> <span class="nx">Vue</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+             <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt;&lt;h2&gt;标题&lt;/h2&gt;&lt;h4&gt;内容1&lt;/h4&gt;&lt;/div&gt;&#39;</span><span class="p">,</span>
+         <span class="p">})</span>
+         <span class="c1">//第二个组件构造器(父组件)
+</span><span class="c1"></span>         <span class="kr">const</span> <span class="nx">cpnC2</span>  <span class="o">=</span> <span class="nx">Vue</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+             <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;div&gt; &lt;h2&gt;hhh&lt;/h2&gt; &lt;h4&gt;lalal&lt;/h4&gt;  &lt;cpn1&gt;&lt;/cpn1&gt; &lt;/div&gt;&#39;</span><span class="p">,</span>
+            <span class="nx">components</span><span class="o">:</span><span class="p">{</span>
+                <span class="nx">cpn1</span><span class="o">:</span><span class="nx">cpnC1</span>
+                <span class="c1">//在这注册之后只能在这个组件里面使用
+</span><span class="c1"></span>                <span class="c1">//会优先在这找
+</span><span class="c1"></span>            <span class="p">}</span><span class="c1">//在第二个组件构造器中创建组件，
+</span><span class="c1"></span>            <span class="c1">//第一个组件可以放到第二个组件构造器中
+</span><span class="c1"></span>         <span class="p">})</span>
+</code></pre></div><h3 id="分离写法">分离写法</h3>
+<p>全部在组件扩展器中写非常不方便，而且在js中写很多html语法会非常乱，所以使用分离写法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"> <span class="c">&lt;!-- 第一种分离写法 --&gt;</span>
+     <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/x-template&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;cpn&#34;</span><span class="p">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span> 
+            <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">hhh</span><span class="o">&lt;</span><span class="err">/h2&gt; </span>
+            <span class="o">&lt;</span><span class="nx">h4</span><span class="o">&gt;</span><span class="nx">lalal</span><span class="o">&lt;</span><span class="err">/h4&gt;  </span>
+        <span class="o">&lt;</span><span class="err">/div&gt;</span>
+     <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+     <span class="c">&lt;!-- 第二种 --&gt;</span>
+     <span class="p">&lt;</span><span class="nt">template</span> <span class="na">id</span><span class="o">=</span><span class="s">&#39;cpn2&#39;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span> 
+            <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>hhh<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span> 
+            <span class="p">&lt;</span><span class="nt">h4</span><span class="p">&gt;</span>lalal<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>  
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+     <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+</code></pre></div><p>然后在使用id为cpn的部分的时候直接使用template:'#cpn&rsquo;即可</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="s1">&#39;cpn1&#39;</span><span class="p">,{</span>
+            <span class="nx">template</span><span class="o">:</span><span class="s1">&#39;#cpn&#39;</span>
+        <span class="p">})</span><span class="c1">//直接传到extend()中
+</span><span class="c1">//这是以语法糖的形式注册全局组件
+</span></code></pre></div><h3 id="数据传递">数据传递</h3>
+<p>类比vue实例中的存放方式，可以在定义组件的时候设定data和methods</p>
+<p>data必须是一个函数，一定要有return，返回的是一个对象(多个组件示例使用的不是一个data对象，这样每次使用的时候调用一次data函数，在栈空间中产生一个新的对象)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="s1">&#39;cpn1&#39;</span><span class="p">,{</span>
+            <span class="nx">template</span><span class="o">:</span><span class="s1">&#39;#cpn&#39;</span><span class="p">,</span>
+            <span class="nx">data</span><span class="p">(){</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;abc&#39;</span><span class="p">,</span>
+                    <span class="nx">count</span><span class="o">:</span><span class="mi">1</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="nx">methods</span><span class="o">:</span><span class="p">{</span>
+                <span class="nx">add</span><span class="p">(){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+        <span class="p">})</span>
+</code></pre></div><h3 id="数据传递-1">数据传递</h3>
+<h4 id="父传子props">父传子props</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">props</span><span class="o">:</span><span class="p">{</span>
+    <span class="nx">cmovies</span><span class="o">:</span><span class="p">{</span>
+    <span class="nx">type</span><span class="o">:</span><span class="nb">Array</span><span class="p">,</span><span class="c1">//限制了类型
+</span><span class="c1"></span>    <span class="k">default</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="p">[]</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">cm</span><span class="o">:</span><span class="p">{</span>
+        <span class="nx">type</span><span class="o">:</span><span class="nb">String</span><span class="p">,</span>
+        <span class="k">default</span><span class="o">:</span><span class="s1">&#39;aaaaa&#39;</span><span class="p">,</span><span class="c1">//提供默认值
+</span><span class="c1"></span>        <span class="c1">// require:true//要用这些属性必须传这个值，不然会报错
+</span><span class="c1"></span>        <span class="p">}</span>
+<span class="p">},</span>
+</code></pre></div><p>type进行了类型限制，要求了传入的时候的必须类型
+default提供了默认值（类型是对象或者数组的时候默认值必须是一个函数）
+require:只要使用这个组件就一定要传这个值，否则就会报错</p>
+<h4 id="子传递到父emit">子传递到父$emit</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">template</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;cpn&#34;</span><span class="p">&gt;</span>   
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>       
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">v-for</span><span class="o">=</span><span class="s">&#34;item in categories&#34;</span> <span class="err">@</span><span class="na">click</span><span class="o">=</span><span class="s">&#34;btnClick(item)&#34;</span><span class="p">&gt;</span>{{item.name}}<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>   <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+</code></pre></div><p>(categories是子组件中的数组)</p>
+<p>当父组件要拿到子组件中的item时</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">btnClick</span><span class="p">(</span><span class="nx">item</span><span class="p">){</span>                   
+    <span class="c1">//子组件发射事件                          
+</span><span class="c1"></span>    <span class="k">this</span><span class="p">.</span><span class="nx">$emit</span><span class="p">(</span><span class="s1">&#39;itemclick&#39;</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span>                    
+    <span class="c1">//itemclick:事件名称,默认将item传过去               
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>然后在使用组件的时候v-on(也可写为@)事件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;</span>              
+    <span class="p">&lt;</span><span class="nt">cpn</span> <span class="na">v-on:itemclick</span><span class="o">=</span><span class="s">&#34;cpnclick&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+    <span class="c">&lt;!--@itemclick也可以，差别是@itemclick未传参时会传event，（itemClick不能写驼峰）--&gt;</span>
+    <span class="c">&lt;!-- cpnclick是在父组件中的 --&gt;</span>        
+    <span class="c">&lt;!-- 在子组件中通过$emit()来触发事件        
+</span><span class="c">	在父组件中通过v-on来监听子组件事件 --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div><h4 id="children-和-ref">$children 和 $ref</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">btnClick</span><span class="p">(){</span>    
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$children</span><span class="p">);</span><span class="c1">//打印的是一个数组，可以通过这个方法直接拿到子组件    
+</span><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">c</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">$children</span><span class="p">){</span>        
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>        
+        <span class="nx">c</span><span class="p">.</span><span class="nx">showMessage</span><span class="p">;</span><span class="c1">//调用子组件中的方法    
+</span><span class="c1"></span>    <span class="p">}</span>    
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$refs</span><span class="p">.</span><span class="nx">aaa</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span><span class="c1">//拿到子组件    
+</span><span class="c1"></span>    <span class="c1">// $refs =&gt;对象类型，默认是一个空的对象 必须在组件中加入ref=&#39;&#39;
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h4 id="parent-和-root">$parent 和 $root</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">btnClick</span><span class="p">(){</span>      
+    <span class="c1">// 访问父组件      
+</span><span class="c1"></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$parent</span><span class="p">);</span>      
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$parent</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>      
+    <span class="c1">//得到父组件中的元素   
+</span><span class="c1"></span>    
+    <span class="c1">//  访问根组件root      
+</span><span class="c1"></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$root</span><span class="p">);</span>       
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$root</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="插槽slot">插槽slot</h3>
+<p>组件在不同的地方放置时需要的内容不同，可以替换slot中的内容</p>
+<p>可以给slot中加上默认值，没有其他内容将显示默认值</p>
+<p>替换内容时可替换多个语句</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;&lt;</span><span class="nt">button</span><span class="p">&gt;</span>按钮<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span><span class="c">&lt;!--使用默认值--&gt;</span>
+        <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>hhh<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>hehehe<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+        <span class="c">&lt;!-- 可以放多个 --&gt;</span>
+        
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">template</span> <span class="na">id</span><span class="o">=</span><span class="s">&#39;cpn&#39;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>我是组件
+            <span class="p">&lt;</span><span class="nt">slot</span><span class="p">&gt;&lt;</span><span class="nt">button</span><span class="p">&gt;</span>按钮<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;&lt;/</span><span class="nt">slot</span><span class="p">&gt;</span>
+        <span class="c">&lt;!-- 组件在不同的地方放置时需要的东西不同 --&gt;</span>
+        <span class="c">&lt;!-- 要是在这里放置一个默认值，没有的也显示默认值 --&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        
+    <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+</code></pre></div><h4 id="具名插槽">具名插槽</h4>
+<p>没有指定名字就只替换没有名字的插槽，有名字的要替换需要添加名字</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;&lt;</span><span class="nt">span</span> <span class="na">slot</span><span class="o">=</span><span class="s">&#34;c&#34;</span><span class="p">&gt;</span>标题<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>我还是组件<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">template</span> <span class="na">id</span><span class="o">=</span><span class="s">&#39;cpn&#39;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>我是组件
+            <span class="p">&lt;</span><span class="nt">slot</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;l&#34;</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>左边<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">slot</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">slot</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;c&#34;</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>中间<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">slot</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">slot</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;r&#34;</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>右边<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">slot</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">slot</span><span class="p">&gt;</span>我不是组件<span class="p">&lt;/</span><span class="nt">slot</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        
+    <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+</code></pre></div><h4 id="作用域插槽">作用域插槽</h4>
+<p>父组件替换插槽的标签，但是内容由子组件来提供</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">components</span><span class="o">:</span><span class="p">{</span>
+                <span class="nx">cpn</span><span class="o">:</span><span class="p">{</span>
+                    <span class="nx">template</span><span class="o">:</span><span class="s1">&#39;#cpn&#39;</span><span class="p">,</span>
+                    <span class="nx">data</span><span class="p">(){</span>
+                        <span class="k">return</span> <span class="p">{</span>
+                            <span class="nx">pLanguages</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;JS&#39;</span><span class="p">,</span><span class="s1">&#39;C++&#39;</span><span class="p">,</span><span class="s1">&#39;C#&#39;</span><span class="p">,</span><span class="s1">&#39;Java&#39;</span><span class="p">]</span><span class="c1">//这是子组件中的数据
+</span><span class="c1"></span>                        <span class="p">}</span>
+                    <span class="p">},</span>
+                    <span class="nx">created</span><span class="p">(){</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">pLanguages</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+</code></pre></div><p>对数据有不同的展示需求时，可以先将数据放入插槽</p>
+<p>然后在改变展示形式的时候，父组件不能直接拿到数据，因为数据不在vue实例中，需要子组件传过去</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;</span>
+       <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+       <span class="p">&lt;</span><span class="nt">cpn</span><span class="p">&gt;</span>
+           <span class="c">&lt;!-- 需要获取子组件中的数据 --&gt;</span>
+           <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">default</span><span class="o">=</span><span class="s">&#34;slot&#34;</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>{{slot.data.join(&#39; - &#39;)}}<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+                <span class="c">&lt;!-- join():将字符串用指定的字符连接 --&gt;</span>
+           <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+       <span class="p">&lt;/</span><span class="nt">cpn</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">template</span> <span class="na">id</span><span class="o">=</span><span class="s">&#39;cpn&#39;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+           <span class="p">&lt;</span><span class="nt">slot</span> <span class="na">:data</span><span class="o">=</span><span class="s">&#34;pLanguages&#34;</span><span class="p">&gt;</span>
+               <span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+                   <span class="p">&lt;</span><span class="nt">li</span> <span class="na">v-for</span><span class="o">=</span><span class="s">&#34;item in pLanguages&#34;</span><span class="p">&gt;</span>{{item}}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+               <span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+           <span class="p">&lt;/</span><span class="nt">slot</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        
+    <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+</code></pre></div><h3 id="将组件抽取出来">将组件抽取出来</h3>
+<p>其实vue中也是可以写template的，会替代el，但是如果在这里写很多行代码的话会很乱，所以要抽取出来变成组件（还有data、methods也要抽取出来)
+然后只需要在vue中用components注册就可以了</p>
+<p>我们可以将项目中的多个文件使用webpack进行打包，会自动寻找文件之间的依赖，只需要将main.js进行打包则所有的相关文件都会被打包生成一个文件，然后在html文件中自动引入</p>
+<p>自己配置webpack非常复杂，需要使用脚手架（CLI）</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-12-19</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>,&nbsp;<a href="/tags/vue/">Vue</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/" class="prev" rel="prev" title="如何在公共博客上新增文章"><i class="fas fa-angle-left fa-fw"></i>如何在公共博客上新增文章</a>
+            <a href="/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/" class="next" rel="next" title="Java流式编程的艺术">Java流式编程的艺术<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.90.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
