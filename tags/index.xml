@@ -39,6 +39,13 @@
     <guid>http://example.org/tags/hugo/</guid>
     <description><![CDATA[]]></description>
 </item><item>
+    <title>Vue</title>
+    <link>http://example.org/tags/vue/</link>
+    <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/tags/vue/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
     <title>入门教学</title>
     <link>http://example.org/tags/%E5%85%A5%E9%97%A8%E6%95%99%E5%AD%A6/</link>
     <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
