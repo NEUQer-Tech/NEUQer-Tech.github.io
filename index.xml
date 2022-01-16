@@ -27,13 +27,6 @@
     <guid>http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/</guid>
     <description><![CDATA[特性 流不存储元素，但是可以根据需要进行计算转化 流的数据可以来自数据结构、数组、文件等 支持多种聚合操作，如fliter/map/reduce/]]></description>
 </item><item>
-    <title>Vue的组件式开发</title>
-    <link>http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/</link>
-    <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/</guid>
-    <description><![CDATA[Vue的组件化开发 作用 将大的系统拆解成小的组件 整个页面逻辑整体进行处理不利于后期的维护和扩展，因此可以将多个小功能块放到一起组成大的页面 也就]]></description>
-</item><item>
     <title>如何在公共博客上新增文章</title>
     <link>http://example.org/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/</link>
     <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
