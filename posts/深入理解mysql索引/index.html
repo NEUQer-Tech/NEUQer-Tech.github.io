@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>深入理解MySQL索引 - 不洗碗工作室公共博客</title><meta name="Description" content=""><meta property="og:title" content="深入理解MySQL索引" />
+<meta property="og:description" content="什么是索引 索引其实就是一种存储结构，对数据库中的特定列的数值进行排序，并且提供指向列中数值的指针，来完成快速查询。类似于图书的目录，在数据量" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-14T23:27:15+08:00" />
+<meta property="article:modified_time" content="2022-01-14T23:27:15+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="深入理解MySQL索引"/>
+<meta name="twitter:description" content="什么是索引 索引其实就是一种存储结构，对数据库中的特定列的数值进行排序，并且提供指向列中数值的指针，来完成快速查询。类似于图书的目录，在数据量"/>
+<meta name="application-name" content="不洗碗工作室公共博客">
+<meta name="apple-mobile-web-app-title" content="不洗碗工作室公共博客"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/" /><link rel="prev" href="http://example.org/posts/%E5%88%9D%E8%AF%86three.js/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "深入理解MySQL索引",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95\/"
+        },"genre": "posts","keywords": "技术分享, MySQL index","wordcount":  2811 ,
+        "url": "http:\/\/example.org\/posts\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95\/","datePublished": "2022-01-14T23:27:15+08:00","dateModified": "2022-01-14T23:27:15+08:00","publisher": {
+            "@type": "Organization",
+            "name": "秦海棋"},"author": {
+                "@type": "Person",
+                "name": "秦海棋"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="不洗碗工作室公共博客">不洗碗工作室公共博客</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="不洗碗工作室公共博客">不洗碗工作室公共博客</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">深入理解MySQL索引</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/QinHaiqi" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw"></i>秦海棋</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/mysql/"><i class="far fa-folder fa-fw"></i>MySQL</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-01-14">2022-01-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2811 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是索引">什么是索引</a></li>
+    <li><a href="#索引模型">索引模型</a>
+      <ul>
+        <li><a href="#hash">Hash</a></li>
+        <li><a href="#有序数组">有序数组</a></li>
+        <li><a href="#btree">BTREE</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见索引类型">常见索引类型</a>
+      <ul>
+        <li><a href="#普通索引">普通索引</a></li>
+        <li><a href="#主键索引">主键索引</a></li>
+        <li><a href="#联合索引">联合索引</a></li>
+        <li><a href="#覆盖索引">覆盖索引</a></li>
+        <li><a href="#前缀索引">前缀索引</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="什么是索引">什么是索引</h2>
+<p>索引其实就是一种存储结构，对数据库中的特定列的数值进行排序，并且提供指向列中数值的指针，来完成快速查询。类似于图书的目录，在数据量越大的时候它的作用可能就越明显。使用索引需要付出一定的代价，它需要占用一定的空间（用空间换取时间），同时对数据变动的时候也需要进行动态维护。</p>
+<h2 id="索引模型">索引模型</h2>
+<h3 id="hash">Hash</h3>
+<p>哈希表是一种以键 - 值（key-value）存储数据的结构。把值放在数组里，用一个哈希函数把 key 换算成一个确定的位置，然后把 value 放在数组的这个位置。它的优点就是索引只存储哈希码及行指针，所以索引的数据结构非常的紧凑，这也让哈希索引查找速度非常快。</p>
+<p>缺点：</p>
+<ul>
+<li>它仅仅接受等值查询，不支持范围查询。它存储的hash值是经过hash运算之后的，和运算前不一定一样。</li>
+<li>存在hash冲突，会拉出一条链表，会影响查询速度，此时需遍历索引中的行指针。遇到大量Hash值相等的情况后性能并不一定就会比B-Tree索引高</li>
+</ul>
+<p>memory默认索引模型</p>
+<h3 id="有序数组">有序数组</h3>
+<p>数组通病。适用于读多写少的场景，插入效率太差。</p>
+<h3 id="btree">BTREE</h3>
+<p>“N”叉树。（二叉树深度太大，查询起来太费时）。</p>
+<p>这里我们需要区分一下B树和B+树。</p>
+<p>B树数字和结点存放在一起，叶子节点不相连。</p>
+<p>B+树的非叶子结点只包含导航信息，不包含实际的值，所有的叶子结点和相连的节点使用链表相连，便于区间查找和遍历。</p>
+<p>B树的优点：对于靠近根节点的热点数据查询速度很快。</p>
+<p>B+树的优点：</p>
+<p>1、 <strong>B+树的磁盘读写代价更低</strong>：B+树的内部节点并没有指向关键字具体信息的指针，因此其内部节点相对B树更小，如果把所有同一内部节点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多，一次性读入内存的需要查找的关键字也就越多，相对IO读写次数就降低了。</p>
+<p>2、<strong>B+树的查询效率更加稳定</strong>：由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
+<p>3、<strong>B+树更便于遍历</strong>：由于B+树的数据都存储在叶子结点中，分支结点均为索引，方便扫库，只需要扫一遍叶子结点即可，但是B树因为其分支结点同样存储着数据，我们要找到具体的数据，需要进行一次中序遍历按序来扫，所以B+树更加适合在区间查询的情况，所以通常B+树用于数据库索引。</p>
+<p>4、<strong>B+树更适合基于范围的查询</strong>：B树在提高了IO性能的同时并没有解决元素遍历的我效率低下的问题，正是为了解决这个问题，B+树应用而生。B+树只需要去遍历叶子节点就可以实现整棵树的遍历。而且在数据库中基于范围的查询是非常频繁的，而B树不支持这样的操作或者说效率太低。</p>
+<p>InnoDB默认使用B+树 （N为1200左右，树高一般为4，可存储17亿数据）</p>
+<p>特点：</p>
+<ul>
+<li>支持范围查询、排序、模糊查询等</li>
+<li>支持多种索引种类（联合索引）</li>
+<li>可以升级，InnoDB中对热点数据采用自适应Hash，使之具备Hash的功能</li>
+</ul>
+<p>查看innodb一页的大小</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="k">show</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="k">like</span><span class="w"> </span><span class="s1">&#39;innodb_page_size&#39;</span><span class="p">;</span><span class="w">
+</span></code></pre></div><p>修改需要到配置文件里，默认是16K.一般越小，内存划分粒度越大，使用率越高，但是会有其他问题，就是限制了索引字段还有整行的大小。一般来说8k的性能比16要好，但是CPU压力要更大，具体选择看需求。</p>
+<h2 id="常见索引类型">常见索引类型</h2>
+<h3 id="普通索引">普通索引</h3>
+<h4 id="mrr">MRR</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="k">set</span><span class="w"> </span><span class="n">optimizer_switch</span><span class="o">=</span><span class="s1">&#39;mrr=on&#39;</span><span class="p">;</span><span class="w">
+</span></code></pre></div><p>按照主键值排好序，再顺序的读取数据。</p>
+<p>1、磁盘和磁头不再需要来回做机械运动；</p>
+<p>2、可以充分利用磁盘预读</p>
+<p>排序是需要内存的，内存的大小由参数 read_rnd_buffer_size 来控制，太小了就不会启用MRR</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="k">select</span><span class="w"> </span><span class="o">@@</span><span class="n">read_rnd_buffer_size</span><span class="p">;</span><span class="w">
+</span><span class="w"></span><span class="k">set</span><span class="w"> </span><span class="n">read_rnd_buffer_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xxx</span><span class="w">
+</span><span class="w"></span><span class="n">MRR</span><span class="w"> </span><span class="err">在本质上是一种用空间换时间的算法。</span><span class="n">MySQL</span><span class="w"> </span><span class="err">不可能给你无限的内存来进行排序，如果</span><span class="w"> </span><span class="n">read_rnd_buffer</span><span class="w"> </span><span class="err">满了，就会先把满了的</span><span class="w"> </span><span class="n">rowid</span><span class="w"> </span><span class="err">排好序去磁盘读取，接着清空，然后再往里面继续放</span><span class="w"> </span><span class="n">rowid</span><span class="err">，直到</span><span class="w"> </span><span class="n">read_rnd_buffer</span><span class="w"> </span><span class="err">又达到</span><span class="w"> </span><span class="n">read_rnd_buffe</span><span class="w"> </span><span class="err">配置的上限，如此循环。</span><span class="o">```</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="o">###</span><span class="w"> </span><span class="err">唯一索引</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="err">用关键字</span><span class="n">UNIQUE定义</span><span class="err">，索引字段的值必须唯一，但允许有空值（可以有多个</span><span class="k">null</span><span class="err">）。如果是多字段的组合，则组合必须唯一。在对该字段进行增或改时，首先会检查是否重复，如果有，则报出</span><span class="n">duplica错误</span><span class="err">，拒绝操作。</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="err">由于索引具备唯一性，查找到第一个满足条件的记录后，就会停止检索。在最坏的情况下，普通索引比唯一索引多进行一次</span><span class="n">IO读取</span><span class="err">，但是概率极小。</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="err">当唯一索引进行更新操作的时候</span><span class="w"> </span><span class="err">会先进行一次查找判断数据是否唯一，再进行和普通索引一样的操作。如果数据不在内存，唯一索引的代价会更大，因为它不能使用</span><span class="n">change</span><span class="w"> </span><span class="n">buffer</span><span class="err">。</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="err">从性能角度出发优先考虑非唯一索引。</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="o">####</span><span class="w"> </span><span class="err">存在唯一键冲突时的避免策略</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="o">**</span><span class="mi">1</span><span class="p">.</span><span class="err">使用</span><span class="k">insert</span><span class="w"> </span><span class="n">ignore语句</span><span class="o">**</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="k">insert</span><span class="w"> </span><span class="n">ignore会忽略数据库中已经存在的数据</span><span class="p">(</span><span class="err">根据主键或者唯一索引判断</span><span class="p">)</span><span class="err">，如果数据库没有数据，就插入新的数据，如果有数据的话就跳过这条数据</span><span class="p">.</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="o">```</span><span class="k">sql</span><span class="w">
+</span><span class="w"></span><span class="k">insert</span><span class="w"> </span><span class="k">ignore</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="k">table</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="p">(</span><span class="n">xx</span><span class="p">);</span><span class="w">
+</span></code></pre></div><p><strong>2.使用replace into语句</strong></p>
+<p>replace into 首先尝试插入数据到表中。 如果发现表中已经有此行数据(根据主键或者唯一索引判断)则先删除此行数据，然后插入新的数据，否则，直接插入新数据。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="k">replace</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="k">table</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="p">(</span><span class="n">xx</span><span class="p">);</span><span class="w">
+</span></code></pre></div><p><strong>3.使用insert on duplicate key update语句</strong></p>
+<p>如果在insert into 语句末尾指定了on duplicate key update，并且插入行后会导致在一个UNIQUE索引或PRIMARY KEY中出现重复值，则在出现重复值的行执行UPDATE；如果不会导致重复的问题，则插入新行，跟普通的insert into一样。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="k">table</span><span class="p">(</span><span class="n">xxx</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="p">(</span><span class="n">xxx</span><span class="p">)</span><span class="w"> </span><span class="k">on</span><span class="w">
+</span><span class="w"></span><span class="n">duplicate</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">xxx</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">xxx</span><span class="p">);</span><span class="w">
+</span></code></pre></div><p>2、3的区别在于，3在原数据上进行修改，2先删除再插入新的值，如果存在自增id，那么自增id会改变。</p>
+<h3 id="主键索引">主键索引</h3>
+<p>用关键字primary定义。</p>
+<p>主键不能有重复值且不能为null。（唯一索引的特例）</p>
+<p>主键索引一般建议使用数据表的自增唯一主键来作为主键索引使用。（有序+占用空间小）</p>
+<p>在没有默认主键的情况下会生成一个6byte空间的自动增长主键。InnDB是聚簇索引，它必须通过主键来定位数据。</p>
+<h3 id="联合索引">联合索引</h3>
+<p>两个或更多个列上的索引被称作联合索引，联合索引又叫复合索引。</p>
+<p>创建形式：key index (a,b,c)</p>
+<p>原则：最左前缀</p>
+<p>索引下推：对于不满足最左前缀原则的部分，在索引遍历过程中，对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数。</p>
+<h3 id="覆盖索引">覆盖索引</h3>
+<p>联合索引的最优情况。</p>
+<h3 id="前缀索引">前缀索引</h3>
+<p>若该字段是一个非常长的字符串类型，可以选择前几个字符为索引。</p>
+<p>需要注意选择字符的长度，关系到命中率。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-01-14</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>,&nbsp;<a href="/tags/mysql-index/">MySQL index</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/%E5%88%9D%E8%AF%86three.js/" class="prev" rel="prev" title="初识Three.js"><i class="fas fa-angle-left fa-fw"></i>初识Three.js</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.90.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -3,9 +3,16 @@
         <title>不洗碗工作室公共博客</title>
         <link>http://example.org/</link>
         <description>不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 09 Jan 2022 22:40:41 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 14 Jan 2022 23:27:15 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>深入理解MySQL索引</title>
+    <link>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</link>
+    <pubDate>Fri, 14 Jan 2022 23:27:15 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</guid>
+    <description><![CDATA[什么是索引 索引其实就是一种存储结构，对数据库中的特定列的数值进行排序，并且提供指向列中数值的指针，来完成快速查询。类似于图书的目录，在数据量]]></description>
+</item><item>
     <title>初识Three.js</title>
     <link>http://example.org/posts/%E5%88%9D%E8%AF%86three.js/</link>
     <pubDate>Sun, 09 Jan 2022 22:40:41 &#43;0800</pubDate>
@@ -19,13 +26,6 @@
     <author>作者</author>
     <guid>http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/</guid>
     <description><![CDATA[特性 流不存储元素，但是可以根据需要进行计算转化 流的数据可以来自数据结构、数组、文件等 支持多种聚合操作，如fliter/map/reduce/]]></description>
-</item><item>
-    <title>Vue的组件式开发</title>
-    <link>http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/</link>
-    <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/</guid>
-    <description><![CDATA[Vue的组件化开发 作用 将大的系统拆解成小的组件 整个页面逻辑整体进行处理不利于后期的维护和扩展，因此可以将多个小功能块放到一起组成大的页面 也就]]></description>
 </item><item>
     <title>如何在公共博客上新增文章</title>
     <link>http://example.org/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/</link>
