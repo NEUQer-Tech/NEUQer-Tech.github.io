@@ -3,9 +3,16 @@
         <title>不洗碗工作室公共博客</title>
         <link>http://example.org/</link>
         <description>不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 14 Jan 2022 23:27:15 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>认证与授权</title>
+    <link>http://example.org/posts/%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83/</link>
+    <pubDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
     <title>深入理解MySQL索引</title>
     <link>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</link>
     <pubDate>Fri, 14 Jan 2022 23:27:15 &#43;0800</pubDate>
