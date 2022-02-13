@@ -3,7 +3,14 @@
         <title>Categories - 分类 - 不洗碗工作室公共博客</title>
         <link>http://example.org/categories/</link>
         <description>Categories - 分类 - 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /><item>
+    <title>ES</title>
+    <link>http://example.org/categories/es/</link>
+    <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/categories/es/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
     <title>认证</title>
     <link>http://example.org/categories/%E8%AE%A4%E8%AF%81/</link>
     <pubDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</pubDate>

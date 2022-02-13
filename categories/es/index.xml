@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>ES - 分类 - 不洗碗工作室公共博客</title>
+        <link>http://example.org/categories/es/</link>
+        <description>ES - 分类 - 不洗碗工作室公共博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/es/" rel="self" type="application/rss+xml" /><item>
+    <title>ES</title>
+    <link>http://example.org/posts/es/</link>
+    <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/es/</guid>
+    <description><![CDATA[@[TOC] 一.elasticsearch简介 Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎]]></description>
+</item></channel>
+</rss>

@@ -3,7 +3,14 @@
         <title>所有文章 - 不洗碗工作室公共博客</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>ES</title>
+    <link>http://example.org/posts/es/</link>
+    <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/es/</guid>
+    <description><![CDATA[@[TOC] 一.elasticsearch简介 Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎]]></description>
+</item><item>
     <title>认证与授权</title>
     <link>http://example.org/posts/%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83/</link>
     <pubDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</pubDate>
