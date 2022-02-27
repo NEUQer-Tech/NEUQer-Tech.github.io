@@ -3,9 +3,16 @@
         <title>不洗碗工作室公共博客</title>
         <link>http://example.org/</link>
         <description>不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 27 Feb 2022 21:05:18 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>简谈浏览器工作及渲染</title>
+    <link>http://example.org/posts/%E7%AE%80%E8%B0%88%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%B8%B2%E6%9F%93/</link>
+    <pubDate>Sun, 27 Feb 2022 21:05:18 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/%E7%AE%80%E8%B0%88%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%B8%B2%E6%9F%93/</guid>
+    <description><![CDATA[1.从Chrome架构来看浏览器工作内容 1.前言 ​ 如果我们想要设计高性能的web应用，或者是优化现有的web应用，就应当了解浏览器中的浏览器]]></description>
+</item><item>
     <title>ES从入门到入坟</title>
     <link>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</link>
     <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
