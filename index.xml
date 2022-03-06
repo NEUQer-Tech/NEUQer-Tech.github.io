@@ -3,9 +3,16 @@
         <title>不洗碗工作室公共博客</title>
         <link>http://example.org/</link>
         <description>不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 27 Feb 2022 21:05:18 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>RPC远程过程调用</title>
+    <link>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</link>
+    <pubDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</guid>
+    <description><![CDATA[RPC (Remote Procedure Call) 写在前面 随着业务发展，单机应用会越来越力不从心，势必会走向分布式。而从单机走向分布式，一台机器如何才能调用另一台机器上的方法呢？这就]]></description>
+</item><item>
     <title>简谈浏览器工作及渲染</title>
     <link>http://example.org/posts/%E7%AE%80%E8%B0%88%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%B8%B2%E6%9F%93/</link>
     <pubDate>Sun, 27 Feb 2022 21:05:18 &#43;0800</pubDate>
