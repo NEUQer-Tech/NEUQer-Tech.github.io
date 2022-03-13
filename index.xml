@@ -3,9 +3,16 @@
         <title>不洗碗工作室公共博客</title>
         <link>http://example.org/</link>
         <description>不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 13 Mar 2022 21:28:12 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Fetch()API及相关基础</title>
+    <link>http://example.org/posts/fetchapi%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80/</link>
+    <pubDate>Sun, 13 Mar 2022 21:28:12 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/fetchapi%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80/</guid>
+    <description><![CDATA[fetch API基础 一 · 基本用法 fetch()是 XMLHttpRequest 的升级版，用于在 JavaScript 脚本里面发出 HTTP 请求 fetch(&#39;url&#39;) .then(response =&gt; response.json()) .then(data =&gt; console.log(data)) 在用法上，fetch()接受一个 URL 字符串作为参数]]></description>
+</item><item>
     <title>RPC远程过程调用</title>
     <link>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</link>
     <pubDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</pubDate>
