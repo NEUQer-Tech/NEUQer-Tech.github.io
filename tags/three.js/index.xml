@@ -7,8 +7,9 @@
     <title>初识Three.js</title>
     <link>http://example.org/posts/%E5%88%9D%E8%AF%86three.js/</link>
     <pubDate>Sun, 09 Jan 2022 22:40:41 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>黄一珂</author>
     <guid>http://example.org/posts/%E5%88%9D%E8%AF%86three.js/</guid>
     <description><![CDATA[初识Three.js 1.引言 Three.js是基于原生WebGL封装运行的三维引擎，在所有WebGL引擎中，Three.js是国内文资料最多]]></description>
-</item></channel>
+</item>
+</channel>
 </rss>

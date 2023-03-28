@@ -7,8 +7,9 @@
     <title>如何在公共博客上新增文章</title>
     <link>http://example.org/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/</link>
     <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>朱坤帅</author>
     <guid>http://example.org/posts/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%85%AC%E5%85%B1%E5%8D%9A%E5%AE%A2%E4%B8%8A%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0/</guid>
     <description><![CDATA[一、安装Hugo 首先，需要我们在本机上安装Hugo。 Hugo的安装非常简单，如果你是MacOS，只需要输入 brew install hugo 即可。 如果你是windows]]></description>
-</item></channel>
+</item>
+</channel>
 </rss>

@@ -7,8 +7,9 @@
     <title>RPC远程过程调用</title>
     <link>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</link>
     <pubDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>洪龙研</author>
     <guid>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</guid>
     <description><![CDATA[RPC (Remote Procedure Call) 写在前面 随着业务发展，单机应用会越来越力不从心，势必会走向分布式。而从单机走向分布式，一台机器如何才能调用另一台机器上的方法呢？这就]]></description>
-</item></channel>
+</item>
+</channel>
 </rss>

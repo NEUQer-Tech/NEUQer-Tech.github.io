@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Mit6.824 MapReduce概念及Lab1的实现 - 不洗碗工作室公共博客</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="Mit6.824 MapReduce概念及Lab1的实现" />
+<meta property="og:description" content="本文是我学习MIT 6.824 Lab1的笔记，主要内容是对于MapReduce的理解和Lab1的实现。 @[TOC] MapReduce框架 如果还没有接触过MapR" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-03-27T23:50:34+08:00" />
+<meta property="article:modified_time" content="2023-03-27T23:50:34+08:00" /><meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mit6.824 MapReduce概念及Lab1的实现"/>
+<meta name="twitter:description" content="本文是我学习MIT 6.824 Lab1的笔记，主要内容是对于MapReduce的理解和Lab1的实现。 @[TOC] MapReduce框架 如果还没有接触过MapR"/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" /><link rel="prev" href="http://example.org/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6-shardingjdbc/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mit6.824 MapReduce概念及Lab1的实现",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0\/"
+        },"genre": "posts","keywords": "技术分享, mit6.824","wordcount":  6217 ,
+        "url": "http:\/\/example.org\/posts\/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0\/","datePublished": "2023-03-27T23:50:34+08:00","dateModified": "2023-03-27T23:50:34+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "吴亚洲"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="不洗碗工作室公共博客">My cool site</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="不洗碗工作室公共博客">My cool site</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Mit6.824 MapReduce概念及Lab1的实现</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>吴亚洲</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>分布式系统</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-27">2023-03-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6217 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 13 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mapreduce框架"><code>MapReduce</code>框架</a>
+      <ul>
+        <li><a href="#mapreduce是什么"><code>MapReduce</code>是什么</a></li>
+        <li><a href="#mapreduce能做什么"><code>MapReduce</code>能做什么</a></li>
+        <li><a href="#mapreduce的工作机制">MapReduce的工作机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#lab1-mapreduce">Lab1: MapReduce</a>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#总览">总览</a></li>
+        <li><a href="#非分布式实现">非分布式实现</a></li>
+        <li><a href="#分布式实现">分布式实现</a></li>
+        <li><a href="#goland配置">GoLand配置</a></li>
+        <li><a href="#程序运行流程">程序运行流程</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>本文是我学习<code>MIT 6.824 Lab1</code>的笔记，主要内容是对于<code>MapReduce</code>的理解和<code>Lab1</code>的实现。</p>
+<p>@[TOC]</p>
+<h2 id="mapreduce框架"><code>MapReduce</code>框架</h2>
+<p>如果还没有接触过<code>MapReduce</code>，最好先阅读一下<a href="https://pdos.csail.mit.edu/6.824/papers/mapreduce.pdf" target="_blank" rel="noopener noreffer ">MapReduce论文</a>，如果阅读英文论文对你来说有些困难，也可以阅读<a href="https://www.cnblogs.com/xiaoxiongcanguan/p/16724085.html" target="_blank" rel="noopener noreffer ">MapReduce论文译文</a>。</p>
+<h3 id="mapreduce是什么"><code>MapReduce</code>是什么</h3>
+<p><code>MapReduce</code>是一个软件框架，基于该框架能够容易地编写应用程序，这些应用程序能够运行在由上千个商用机器组成的大集群上，并以一种可靠的，具有容错能力的方式并行地处理上<code>TB</code>级别的海量数据集。</p>
+<p>它极大地方便了编程人员在不会分布式并行编程的情况下，将自己的程序运行在<a href="https://baike.baidu.com/item/%e5%88%86%e5%b8%83%e5%bc%8f%e7%b3%bb%e7%bb%9f/4905336?fromModule=lemma_inlink" target="_blank" rel="noopener noreffer ">分布式系统</a>上。</p>
+<h3 id="mapreduce能做什么"><code>MapReduce</code>能做什么</h3>
+<p><code>MapReduce</code>的思想是“分而治之”，因此<code>MapReduce</code>尤其擅长处理大数据。</p>
+<p>比如Google可以利用<code>MapReduce</code>框架处理大量的爬虫获取到的文档、网络请求日志等原始数据，获得倒排索引等衍生数据。</p>
+<p><code>MapReduce</code>由两个主要的过程构成，即“<code>Map</code>（映射）”和“<code>Reduce</code>（归约）”。</p>
+<ol>
+<li>
+<p><code>Mapper</code>负责“分”，即把大量、复杂的任务分解为若干个“简单的任务”，其中“简单的任务”需要满足以下几点要求：</p>
+<ul>
+<li>数据规模相较于原任务要极大缩小</li>
+<li>满足“就近计算原则”，即计算过程最好发生在存放需要计算数据的节点上</li>
+<li>每个小任务之间几乎没有依赖关系，这些小任务可以并行计算</li>
+</ul>
+</li>
+<li>
+<p><code>Reducer</code>负责“汇总”，即把<code>Mapper</code>处理完的数据收集起来。</p>
+</li>
+</ol>
+<p>举一个简单的例子：</p>
+<p>假如我们有<code>1TB</code>的英文文本数据，怎么才能统计出文本中每个不同的单词出现的次数呢？</p>
+<p>当数据量很小的时候，我们很容易想到，只需要声明一个哈希表<code>map</code>，把每个单词出现的次数记录到<code>map</code>中就可以解决问题。但是现在文本的大小是以<code>TB</code>为单位，如果此时我们继续采取上述策略，在一台机器上运行，那么无论是在时间上还是在空间上都是不可行的。</p>
+<p>此时，<code>MapReduce</code>就派上用场了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/WordCount.png"
+        data-srcset="/images/WordCount.png, /images/WordCount.png 1.5x, /images/WordCount.png 2x"
+        data-sizes="auto"
+        alt="/images/WordCount.png"
+        title="在这里插入图片描述" /></p>
+<p>如上图，</p>
+<ol>
+<li>在进行<code>MapReduce</code>之前我们需要先把数据分割成若干份小数据，以便让它们在多台机器上并行运算，分割后的结果是<code>&lt;Key,Value&gt;</code>类型，其中<code>Key</code>可能有多种含义，在后续运算中一般不会用到，每一个<code>Value</code>是若干单词的集合。</li>
+<li>分割完成后，在每一台机器上都会先进行<code>Map</code>过程，<code>Map</code>方法会统计出输入数据中每个单词出现的次数，并以<code>&lt;Key,Value&gt;</code>形式展现，其中<code>Key</code>是单词，<code>Value</code>是该单词的出现次数，在本例中<code>Value</code>值都为<code>1</code>。</li>
+<li>完成<code>Map</code>过程后，有可能会有一个<code>Combine</code>聚合过程，该过程会把<code>Key</code>相同的几组数据聚合成一组。</li>
+<li>最后是<code>Reduce</code>过程，该过程会汇总所有机器<code>Combine</code>后的结果，并把<code>Key</code>相同的几组数据聚合成一组，最终得到原始数据中每个单词出现的次数。</li>
+</ol>
+<h3 id="mapreduce的工作机制">MapReduce的工作机制</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/MapReduce.png"
+        data-srcset="/images/MapReduce.png, /images/MapReduce.png 1.5x, /images/MapReduce.png 2x"
+        data-sizes="auto"
+        alt="/images/MapReduce.png"
+        title="在这里插入图片描述" /></p>
+<p>上图是论文中对于<code>MapReduce</code>流程的描述。</p>
+<p>它主要包含以下四个角色：</p>
+<ol>
+<li><code>User Program</code>：用户程序，即客户端，用来提交<code>MapReduce</code>任务。</li>
+<li><code>Master</code>：<code>master</code>进程用于分配任务，协调任务的进行。</li>
+<li><code>Map Worker</code>：执行<code>Map</code>方法的进程。</li>
+<li><code>Reduce Worker</code>：执行<code>Reduce</code>方法的进程。</li>
+</ol>
+<p>输入数据以文件形式进入系统。在<code>master</code>进程的调整、分配下一些进程运行<code>map</code>任务，拆分了原任务，产生了一些中间体，这些中间体可能以键值对形式存在。另外一些进程运行了<code>reduce</code>任务，利用中间体产生最终输出。</p>
+<h2 id="lab1-mapreduce">Lab1: MapReduce</h2>
+<h3 id="前言">前言</h3>
+<ul>
+<li><code>Lab1</code>的官方说明在<a href="https://pdos.csail.mit.edu/6.824/labs/lab-mr.html" target="_blank" rel="noopener noreffer ">Lab1 Note</a>。</li>
+<li>在动手实现 <code>Lab1</code>之前，一定要先阅读<a href="https://pdos.csail.mit.edu/6.824/papers/mapreduce.pdf" target="_blank" rel="noopener noreffer ">MapReduce论文</a>。</li>
+<li><code>mit 6.824</code>的所有<code>Lab</code>都是用<code>GoLang</code>来实现的，如果之前没有学习过<code>Go</code>语言，可以从以下途径中任选一条进行学习：
+<ul>
+<li>
+<p><a href="https://tour.go-zh.org/" target="_blank" rel="noopener noreffer ">Go 官方指南</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1fD4y1m7TD/" target="_blank" rel="noopener noreffer ">Go语言编程快速入门</a></p>
+</li>
+<li>
+<p><a href="https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md" target="_blank" rel="noopener noreffer ">Go构建Web程序</a></p>
+</li>
+</ul>
+</li>
+<li>这是初始实验的git仓库:<code>git://g.csail.mit.edu/6.824-golabs-2020 6.824</code>,所有代码需要运行在<code>Linux</code>或<code>Mac OS</code>上。</li>
+</ul>
+<h3 id="总览">总览</h3>
+<p><code>Lab1</code>要求我们实现一个和<a href="https://pdos.csail.mit.edu/6.824/papers/mapreduce.pdf" target="_blank" rel="noopener noreffer ">MapReduce论文</a>类似的机制，也就是数单词个数<code>Word Count</code>。</p>
+<p>在正式开始写分布式代码之前，我们先理解一下任务和已有的代码。</p>
+<p>输入文件在<code>src/main</code>中，文件名是<code>pg-*.txt</code>，其中每一个文件都是一本电子书，内容很多，我们的任务是统计出所有<code>pg-*.txt</code>文件中所有出现的单词以及它们的出现次数。</p>
+<h3 id="非分布式实现">非分布式实现</h3>
+<p>在单机中，实现这个程序很简单，初始实验条件中已经给出了示例，在<code>src/main/mrsequential.go</code>中可以看到代码实现。</p>
+<p>尝试在合适的系统中运行该示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="nb">cd</span> src/main
+go build -buildmode<span class="o">=</span>plugin ../mrapps/wc.go
+go run mrsequential.go wc.so pg*.txt
+</code></pre></div><p>如果运行成功，输出结果将存在于<code>src/main/mr-out-0</code>文件中，里面展示了所有文章出现的所有单词以及它们的出现次数。</p>
+<p>其中，<code>go build -buildmode=plugin ../mrapps/wc.go</code>将 <code>wc.go</code> 文件编译为一个插件模块，可以在运行时被其他代码加载和使用。<code>wc.go</code>中定义了名为<code>Map</code>和<code>Reduce</code>的函数，这两个函数在<code>mrsequential.go</code>被加载和调用。</p>
+<p><code>go run mrsequential.go</code>后面的两项是传入的命令行参数，可以在<code>mrsequential.go</code>中用<code>os.Args</code>获取到，第一个参数表示要加载的插件，第二个参数表示要统计单词次数的输入文件名。</p>
+<p><code>mrsequential.go</code>的代码比较容易理解，在此不再过多解释，在我的<a href="https://github.com/asiaWu3/mit6.824-Lab1" target="_blank" rel="noopener noreffer ">GitHub仓库</a>中该代码有详细的中文注释，可以去查看以方便理解。</p>
+<p><code>mrsequential.go</code>的实现是非分布式的，但分布式下的代码和非分布式下的代码运行得到的结果应该是完全一样的，因此<code>mr-out-0</code>的内容将作为分布式下代码运行结果的评估标准的一部分。</p>
+<h3 id="分布式实现">分布式实现</h3>
+<p>我们要写的代码在<code>src/mr</code>中，<code>src/mr</code>中的代码将由<code>src/main/mrmaster.go</code>和<code>src/main/mrworker.go</code>调用，这两个代码的作用是启动进程、加载<code>wc.so</code>插件。</p>
+<p>其中，前者需要运行一次以启动一个<code>master</code>进程，后者需要运行多次以启动多个<code>worker</code>进程。</p>
+<p><code>master</code>进程用于监听<code>worker</code>进程的<code>RPC</code>调用，并给它们分配合适的<code>map/reduce</code>任务，在此过程中<code>master</code>需要关注<code>worker</code>是否完成了任务，如果没有按时完成，需要将任务重新分配给其他<code>worker</code>。</p>
+<p><code>worker</code>进程启动后会主动请求<code>master</code>进程要任务，具体要到的是<code>map</code>还是<code>reduce</code>任务由<code>master</code>决定。</p>
+<p><code>map</code>方法传入文件名和文件内容，对文件内容进行处理，分割每一个单词，形成许多<code>key-value</code>键值对并作为结果返回，<code>key</code>是一个个单词，<code>value</code>的值都为 $1$  ，因为一个输入文件中可能有很多相同的单词，所以会出现很多相同的<code>key</code>。</p>
+<p><code>reduce</code>方法接收到的是同一个键（<code>key</code>）所对应的所有值（<code>value</code>）集合，而这些值（<code>value</code>）来自于不同的 <code>map</code> 任务，由于<code>map</code>返回的所有<code>value</code>都为 $1$ ，所以<code>reduce</code>只需要返回传入集合中数据的个数，这个值就是单词<code>key</code>在所有输入文件中出现的次数，合并所有<code>reduce</code>任务的返回结果就可以得到<code>Word Count</code>的结果。</p>
+<p>运行过程:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">go build -buildmode<span class="o">=</span>plugin ../mrapps/wc.go
+rm mr-out*
+go run mrmaster.go pg-*.txt
+<span class="c1"># 运行一个或多个mrworker</span>
+go run mrworker.go wc.so
+<span class="c1">#将所有mr-out-*文件合并、排序后查看结果</span>
+cat mr-out-* <span class="p">|</span> sort <span class="p">|</span> more
+</code></pre></div><p><code>Lab1</code>的原始代码中已经提供了<code>RPC</code>的实现和调用示例，我们只需要按照示例写出发送的信息<code>args</code>、要接收的信息<code>reply</code>和远程调用的方法名（反射实现）。</p>
+<p>我们最终的目标是通过<code>src/main/test-mr.sh</code>中的五个测试：</p>
+<ol>
+<li>基本的<code>Word Count</code>测试:先生成正确的输出，然后使用 <code>mrmaster</code> 和 <code>mrworker</code> 运行测试。如果输出结果与正确的结果相同，则测试通过。</li>
+<li><code>indexer</code> 测试：先生成正确的输出，然后使用 <code>mrmaster</code> 和 <code>mrworker</code> 运行测试。如果输出结果与正确的结果相同，则测试通过。</li>
+<li><code>map</code> 并行度测试：在启动 <code>mrmaster</code> 和 <code>mrworker</code> 后，同时启动两个 <code>mtiming.so</code>的 <code>worker</code>，通过比较输出结果判断是否达到预期的并行度。</li>
+<li><code>reduce</code> 并行度测试：在启动 <code>mrmaster</code> 和 <code>mrworker</code> 后，同时启动两个 <code>rtiming.so</code> 的 <code>worker</code>，通过比较输出结果判断是否达到预期的并行度。</li>
+<li>容错测试：在启动 <code>mrmaster</code> 和 <code>crash.so worker</code> 后，它会不断重启 <code>crash.so worker</code> 直到完成任务。完成后，比较输出结果与正确结果是否相同。</li>
+</ol>
+<p>仔细查看<code>test-mr.sh</code>中第一个测试部分的代码，其中有一行</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">sort mr-out* <span class="p">|</span> grep . &gt; mr-wc-all
+</code></pre></div><p>意思是把所有<code>mr-out-*</code>文件合并并排序后存放在<code>mr-wc-all</code>中，之后再拿<code>mr-wc-all</code>和<code>Word Count</code>正确的结果对比。</p>
+<p>因此，我们的任务不是像<code>mrsequential.go</code>一样生成最终的一个<code>mr-out-0</code>文件，而是生成多个<code>mr-out-*</code>文件，具体个数由<code>mrmaster</code>中传入的<code>nReduce</code>的值决定，即一个<code>reduce</code>任务最终生成一个<code>mr-out-*</code>文件，这就要求我们每个<code>reduce</code>任务处理的单词不能一样，即所有相同的单词都要被放到同一个<code>reduce</code>任务里执行。</p>
+<p><a href="https://pdos.csail.mit.edu/6.824/labs/lab-mr.html" target="_blank" rel="noopener noreffer ">Lab1 Note</a>中已经给出了提示，每个<code>map</code>任务处理一个<code>pg-*txt</code>文件，一个<code>map</code>任务产生的中间文件应该命名为<code>mr-X-Y</code>，可能有多个，如<code>mr-X-0</code>、<code>mr-X-1</code>&hellip;&hellip;</p>
+<p>其中<code>X</code>为<code>mapWorkerId</code>，<code>Y</code>是由处理到的单词通过<code>ihash</code>方法联合<code>nReduce</code>决定的，表示把这个单词分给哪个<code>reduce</code>任务。因此，不同文件中相同的单词被分到的<code>mr-*-Y</code>文件<code>Y</code>的值一定相同，之后执行第<code>i</code>个<code>reduce</code>任务时只需要读取所有的<code>mr-*-i</code>文件并合并处理就可以实现所有相同的单词被同一个<code>reduce</code>任务处理的效果，最终经过<code>reduce</code>任务的处理，产生文件<code>mr-out-i</code>。</p>
+<h3 id="goland配置">GoLand配置</h3>
+<p>如果在<code>Ubuntu</code>或<code>Mac OS</code>上用的<code>IDE</code>是<code>GoLand</code>，有以下几个配置可以简化运行时的操作：</p>
+<ol>
+<li>
+<p>因为每次更改<code>worker.go</code>后，在运行测试前都要重新加载插件，所以可以把加载插件的语句放在一个<code>sh</code>脚本里，比如我代码里的<code>src/main/wc-build.sh</code>，里面其实只有一句：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">1</span> go build -race  -buildmode<span class="o">=</span>plugin ../mrapps/wc.go
+</code></pre></div></li>
+<li>
+<p>另外因为运行<code>mrmaster.go</code>和<code>mrworker.go</code>需要传入命令行参数，所以可以在<code>GoLang</code>右上角&quot;编辑配置&quot;中进行如下配置：</p>
+<ul>
+<li>
+<p><code>mrsequential.go</code>:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/mapreduce-1.png"
+        data-srcset="/images/mapreduce-1.png, /images/mapreduce-1.png 1.5x, /images/mapreduce-1.png 2x"
+        data-sizes="auto"
+        alt="/images/mapreduce-1.png"
+        title="在这里插入图片描述" /></p>
+</li>
+<li>
+<p><code>mrmaster.go</code>：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/mapreduce-2.png"
+        data-srcset="/images/mapreduce-2.png, /images/mapreduce-2.png 1.5x, /images/mapreduce-2.png 2x"
+        data-sizes="auto"
+        alt="/images/mapreduce-2.png"
+        title="在这里插入图片描述" /></p>
+</li>
+<li>
+<p><code>mrworker.go</code>：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/mapreduce-3.png"
+        data-srcset="/images/mapreduce-3.png, /images/mapreduce-3.png 1.5x, /images/mapreduce-3.png 2x"
+        data-sizes="auto"
+        alt="/images/mapreduce-3.png"
+        title="在这里插入图片描述" /></p>
+</li>
+</ul>
+</li>
+</ol>
+<p>注意，因为<code>GoLand</code>的实参不支持通配符，所以在写文件名时不能写<code>pg-*txt</code>，要把所有文件的文件名都写上，具体如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-tex" data-lang="tex">pg-being<span class="nb">_</span>ernest.txt pg-dorian<span class="nb">_</span>gray.txt pg-frankenstein.txt pg-grimm.txt pg-huckleberry<span class="nb">_</span>finn.txt pg-metamorphosis.txt pg-sherlock<span class="nb">_</span>holmes.txt pg-tom<span class="nb">_</span>sawyer.txt
+</code></pre></div><pre><code>上面两项都配置好之后，就可以按如下顺序启动并测试程序：
+</code></pre>
+<ol>
+<li>运行<code>wc-build.sh</code></li>
+<li>运行<code>mrmaster.go</code></li>
+<li>运行<code>mr-worker.go</code></li>
+</ol>
+<h3 id="程序运行流程">程序运行流程</h3>
+<p>因为所有代码加起来代码量很大，所以在这里不会展示具体的代码，只详细解释程序运行的流程，代码可以去<a href="https://github.com/asiaWu3/mit6.824-Lab1" target="_blank" rel="noopener noreffer ">GitHub仓库</a>查看。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/mapreduce-process.png"
+        data-srcset="/images/mapreduce-process.png, /images/mapreduce-process.png 1.5x, /images/mapreduce-process.png 2x"
+        data-sizes="auto"
+        alt="/images/mapreduce-process.png"
+        title="在这里插入图片描述" /></p>
+<p>上图简要展示了程序运行的流程，具体流程如下：</p>
+<ol>
+<li>
+<p>客户端通过运行一次<code>mrmaster.go </code>启动一个<code>master</code>进程，启动时，会进行以下操作：</p>
+<ul>
+<li>创建一个<code>Master</code>结构体</li>
+<li>根据命令行传入的文件生成所有<code>map</code>任务并存放在<code>Master</code>的<code>MapChannel</code>中</li>
+<li>开启一个新的线程不断循环判断有没有过期(分配出去但十秒内未完成)的<code>map</code>和<code>reduce</code>任务</li>
+<li>开始监听来自<code>worker</code>的<code>RPC</code>调用</li>
+</ul>
+</li>
+<li>
+<p>客户端通过运行多次<code>mrworker.go</code>启动多个<code>worker</code>进程，每个<code>worker</code>启动时，都会进行以下操作：</p>
+<ul>
+<li>创建一个<code>AWorker</code>结构体</li>
+<li>只要<code>master</code>进程没有通知<code>worker</code>进程所有任务都已经完成，<code>worker</code>进程就一直向<code>master</code>进程要任务</li>
+</ul>
+</li>
+<li>
+<p><code>master</code>接收到<code>worker</code>的要任务请求后，根据所有任务的完成情况给<code>worker</code>分配任务，分配规则是：所有<code>map</code>任务全部完成后才可以去分配<code>reduce</code>任务</p>
+</li>
+<li>
+<p>当<code>worker</code>要到任务后，<code>worker</code>会首先判断这个任务是<code>map</code>任务还是<code>reduce</code>任务，并根据任务类型执行不同的逻辑</p>
+<ul>
+<li>如果是<code>map</code>任务，会执行<code>doMap</code>逻辑，全部执行完后会在<code>/var/tmp</code>目录下生成文件名为<code>mr-X-Y</code>的临时文件，其中<code>X</code>是当前<code>mapWorker</code>的<code>ID</code>，<code>Y</code>是通过<code>ihash</code>方法计算出来的</li>
+<li>如果是<code>reduce</code>任务，会执行<code>doReduce</code>逻辑，<code>worker</code>会从 <code>src/main</code>中读取所有<code>mr-*-Y</code>文件，其中<code>Y</code>是当前<code>reduceWorker</code>的<code>reduce</code>任务的编号，最终会在<code>/var/tmp</code>目录下生成文件名为<code>mr-out-Y</code>的临时文件</li>
+</ul>
+</li>
+<li>
+<p><code>worker</code>执行完自己的任务后，会执行<code>mapTaskDone</code>或<code>reduceTaskDone</code>方法，告诉<code>master</code>自己的任务完成了，通知完之后会立马继续向<code>master</code>要新的任务</p>
+</li>
+<li>
+<p><code>master</code>在接收到<code>worker</code>完成任务的通知后，会先判断这个<code>worker</code>完成这个任务有没有超时，具体就是判断这个任务的状态是不是<code>Running</code>，如果是就没有超时；否则，如果状态是<code>Ready</code>，就说明该任务已经被<code>master</code>中的循环检测任务过期的线程判定为过期并设为<code>Ready</code>状态；如果状态是<code>Finished</code>，说明这个任务被判定为超时后又被分配给其他<code>worker</code>并被那个<code>worker</code>按时完成</p>
+</li>
+<li>
+<p>如果<code>master</code>判断<code>worker</code>在规定时间内完成了任务，则：</p>
+<ul>
+<li><code>worker</code>执行的是<code>map</code>任务：<code>master</code>会调用<code>generateMapFile</code>方法，将<code>worker</code>在<code>/var/tmp</code>中生成的临时文件<code>mr-X-Y</code>复制到 <code>src/main</code>中，作为正式的该<code>map</code>任务完成后产生的中间文件，表示<code>master</code>接受了该<code>worker</code>的成果</li>
+<li><code>worker</code>执行的是<code>reduce</code>任务：<code>master</code>会调用<code>generateReduceFile</code>方法，将<code>worker</code>在<code>/var/tmp</code>中生成的临时文件<code>mr-out-Y</code>复制到 <code>src/main</code>中，作为正式的该<code>reduce</code>任务完成后产生的最终文件，表示<code>master</code>接受了该<code>worker</code>的成果</li>
+</ul>
+</li>
+<li>
+<p>当<code>master</code>的<code>MapChannel</code>中存储的所有任务都被完成后，<code>master</code>会将任务分配阶段由<code>MapPhase</code>调整为<code>ReducePhase</code>，在这之后，<code>master</code>就会给来请求任务的<code>worker</code>分配<code>reduce</code>任务</p>
+</li>
+<li>
+<p>当<code>master</code>的<code>ReduceChannel</code>中存储的所有任务都被完成后，表示所有的<code>map</code>任务和<code>reduce</code>任务都已经完成，此时<code>master</code>会调用<code>finish</code>方法，准备终止<code>master</code>进程，并通知所有的<code>master</code>任务完成了，终止所有<code>worker</code></p>
+</li>
+</ol>
+<h3 id="注意事项">注意事项</h3>
+<ul>
+<li>
+<p>因为同一时间可能会有多个<code>worker</code>请求同一个<code>master</code>，所以一定要注意<code>master</code>里共享变量的读写，在适当的地方加锁。</p>
+</li>
+<li>
+<p>每次运行测试前一定要清空上一次测试生成的文件，防止对本次运行产生干扰。</p>
+</li>
+<li>
+<p>多输出调试信息，可以用<code>fmt.Print*</code>，也可以用<code>log.Print*</code>，在第一次输出正确的<code>Word Count</code>结果之前，输出越详细越好。</p>
+</li>
+<li>
+<p>用于<code>RPC</code>通信的结构体、变量名首字母要大写，否则会拿不到数据。
+因为同一时间可能会有多个<code>worker</code>请求同一个<code>master</code>，所以一定要注意<code>master</code>里共享变量的读写，在适当的地方加锁。</p>
+</li>
+<li>
+<p>每次运行测试前一定要清空上一次测试生成的文件，防止对本次运行产生干扰。</p>
+</li>
+<li>
+<p>多输出调试信息，可以用<code>fmt.Print*</code>，也可以用<code>log.Print*</code>，在第一次输出正确的<code>Word Count</code>结果之前，输出越详细越好。</p>
+</li>
+<li>
+<p>用于<code>RPC</code>通信的结构体、变量名首字母要大写，否则会拿不到数据。</p>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-03-27</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-title="Mit6.824 MapReduce概念及Lab1的实现" data-hashtags="技术分享,mit6.824"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-hashtag="技术分享"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-title="Mit6.824 MapReduce概念及Lab1的实现"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-title="Mit6.824 MapReduce概念及Lab1的实现"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" data-title="Mit6.824 MapReduce概念及Lab1的实现"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>,&nbsp;<a href="/tags/mit6.824/">mit6.824</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6-shardingjdbc/" class="prev" rel="prev" title="数据库中间件--ShardingJDBC(附小demo)"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>数据库中间件--ShardingJDBC(附小demo)</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.90.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2021 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

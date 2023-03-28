@@ -3,75 +3,85 @@
         <title>所有文章 - 不洗碗工作室公共博客</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 27 Mar 2022 23:02:09 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 27 Mar 2023 23:50:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Mit6.824 MapReduce概念及Lab1的实现</title>
+    <link>http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+    <pubDate>Mon, 27 Mar 2023 23:50:34 &#43;0800</pubDate>
+    <author>吴亚洲</author>
+    <guid>http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+    <description><![CDATA[本文是我学习MIT 6.824 Lab1的笔记，主要内容是对于MapReduce的理解和Lab1的实现。 @[TOC] MapReduce框架 如果还没有接触过MapR]]></description>
+</item>
+<item>
     <title>数据库中间件--ShardingJDBC(附小demo)</title>
     <link>http://example.org/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6-shardingjdbc/</link>
     <pubDate>Sun, 27 Mar 2022 23:02:09 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>周子胜</author>
     <guid>http://example.org/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6-shardingjdbc/</guid>
     <description><![CDATA[一、ShardingJDBC概述 官网：http://shardingsphere.apache.org/index_zh.html 1.概述 Apache]]></description>
-</item><item>
+</item>
+<item>
     <title>Fetch()API及相关基础</title>
     <link>http://example.org/posts/fetchapi%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80/</link>
     <pubDate>Sun, 13 Mar 2022 21:28:12 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>孙晶玉</author>
     <guid>http://example.org/posts/fetchapi%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80/</guid>
     <description><![CDATA[fetch API基础 一 · 基本用法 fetch()是 XMLHttpRequest 的升级版，用于在 JavaScript 脚本里面发出 HTTP 请求 fetch(&#39;url&#39;) .then(response =&gt; response.json()) .then(data =&gt; console.log(data)) 在用法上，fetch()接受一个 URL 字符串作为参数]]></description>
-</item><item>
+</item>
+<item>
     <title>RPC远程过程调用</title>
     <link>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</link>
     <pubDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>洪龙研</author>
     <guid>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</guid>
     <description><![CDATA[RPC (Remote Procedure Call) 写在前面 随着业务发展，单机应用会越来越力不从心，势必会走向分布式。而从单机走向分布式，一台机器如何才能调用另一台机器上的方法呢？这就]]></description>
-</item><item>
+</item>
+<item>
     <title>简谈浏览器工作及渲染</title>
     <link>http://example.org/posts/%E7%AE%80%E8%B0%88%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%B8%B2%E6%9F%93/</link>
     <pubDate>Sun, 27 Feb 2022 21:05:18 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>黄一珂</author>
     <guid>http://example.org/posts/%E7%AE%80%E8%B0%88%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%B8%B2%E6%9F%93/</guid>
     <description><![CDATA[1.从Chrome架构来看浏览器工作内容 1.前言 ​ 如果我们想要设计高性能的web应用，或者是优化现有的web应用，就应当了解浏览器中的浏览器]]></description>
-</item><item>
+</item>
+<item>
     <title>ES从入门到入坟</title>
     <link>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</link>
     <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>姚辉</author>
     <guid>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</guid>
     <description><![CDATA[@[TOC] 一.elasticsearch简介 Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎]]></description>
-</item><item>
+</item>
+<item>
     <title>认证与授权</title>
     <link>http://example.org/posts/%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83/</link>
     <pubDate>Sun, 30 Jan 2022 21:18:16 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>季炜浩</author>
     <guid>http://example.org/posts/%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83/</guid>
     <description><![CDATA[]]></description>
-</item><item>
+</item>
+<item>
     <title>深入理解MySQL索引</title>
     <link>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</link>
     <pubDate>Fri, 14 Jan 2022 23:27:15 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>秦海棋</author>
     <guid>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</guid>
     <description><![CDATA[什么是索引 索引其实就是一种存储结构，对数据库中的特定列的数值进行排序，并且提供指向列中数值的指针，来完成快速查询。类似于图书的目录，在数据量]]></description>
-</item><item>
+</item>
+<item>
     <title>初识Three.js</title>
     <link>http://example.org/posts/%E5%88%9D%E8%AF%86three.js/</link>
     <pubDate>Sun, 09 Jan 2022 22:40:41 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>黄一珂</author>
     <guid>http://example.org/posts/%E5%88%9D%E8%AF%86three.js/</guid>
     <description><![CDATA[初识Three.js 1.引言 Three.js是基于原生WebGL封装运行的三维引擎，在所有WebGL引擎中，Three.js是国内文资料最多]]></description>
-</item><item>
+</item>
+<item>
     <title>Java流式编程的艺术</title>
     <link>http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/</link>
     <pubDate>Sun, 09 Jan 2022 19:03:17 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>朱坤帅</author>
     <guid>http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/</guid>
     <description><![CDATA[特性 流不存储元素，但是可以根据需要进行计算转化 流的数据可以来自数据结构、数组、文件等 支持多种聚合操作，如fliter/map/reduce/]]></description>
-</item><item>
-    <title>Vue的组件式开发</title>
-    <link>http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/</link>
-    <pubDate>Sun, 19 Dec 2021 18:28:34 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/posts/vue%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/</guid>
-    <description><![CDATA[Vue的组件化开发 作用 将大的系统拆解成小的组件 整个页面逻辑整体进行处理不利于后期的维护和扩展，因此可以将多个小功能块放到一起组成大的页面 也就]]></description>
-</item></channel>
+</item>
+</channel>
 </rss>

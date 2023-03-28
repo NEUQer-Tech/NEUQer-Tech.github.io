@@ -7,8 +7,9 @@
     <title>Fetch()API及相关基础</title>
     <link>http://example.org/posts/fetchapi%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80/</link>
     <pubDate>Sun, 13 Mar 2022 21:28:12 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>孙晶玉</author>
     <guid>http://example.org/posts/fetchapi%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%9F%BA%E7%A1%80/</guid>
     <description><![CDATA[fetch API基础 一 · 基本用法 fetch()是 XMLHttpRequest 的升级版，用于在 JavaScript 脚本里面发出 HTTP 请求 fetch(&#39;url&#39;) .then(response =&gt; response.json()) .then(data =&gt; console.log(data)) 在用法上，fetch()接受一个 URL 字符串作为参数]]></description>
-</item></channel>
+</item>
+</channel>
 </rss>

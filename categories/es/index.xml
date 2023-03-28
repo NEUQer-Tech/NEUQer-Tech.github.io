@@ -7,8 +7,9 @@
     <title>ES从入门到入坟</title>
     <link>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</link>
     <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
-    <author>作者</author>
+    <author>姚辉</author>
     <guid>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</guid>
     <description><![CDATA[@[TOC] 一.elasticsearch简介 Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎]]></description>
-</item></channel>
+</item>
+</channel>
 </rss>
