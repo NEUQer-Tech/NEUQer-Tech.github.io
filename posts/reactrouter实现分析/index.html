@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>React—router实现分析 - 不洗碗工作室公共博客</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="React—router实现分析" />
+<meta property="og:description" content="3.22 主要内容： 浏览器内置的导航相关 api history 库介绍 react-router@6.22部分组件的实现介绍 前置知识 浏览器 api 我们在浏览器中实现的任何功能，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-03-27T20:54:48+08:00" />
+<meta property="article:modified_time" content="2023-03-27T20:54:48+08:00" /><meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="React—router实现分析"/>
+<meta name="twitter:description" content="3.22 主要内容： 浏览器内置的导航相关 api history 库介绍 react-router@6.22部分组件的实现介绍 前置知识 浏览器 api 我们在浏览器中实现的任何功能，"/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" /><link rel="prev" href="http://example.org/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6-shardingjdbc/" /><link rel="next" href="http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "React—router实现分析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90\/"
+        },"genre": "posts","keywords": "技术分享, React","wordcount":  9395 ,
+        "url": "http:\/\/example.org\/posts\/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90\/","datePublished": "2023-03-27T20:54:48+08:00","dateModified": "2023-03-27T20:54:48+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "柯昌鹏"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="不洗碗工作室公共博客">My cool site</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="不洗碗工作室公共博客">My cool site</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">React—router实现分析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/kcfuler" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>柯昌鹏</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-27">2023-03-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 9395 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 19 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#322">3.22</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#浏览器-api">浏览器 api</a>
+      <ul>
+        <li><a href="#windowhistory">window.history</a></li>
+        <li><a href="#windowlocationhash">window.location.hash</a></li>
+      </ul>
+    </li>
+    <li><a href="#history-库">history 库</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#基础部分">基础部分</a>
+      <ul>
+        <li><a href="#browserrouter">BrowserRouter</a></li>
+        <li><a href="#router-组件">Router 组件</a></li>
+        <li><a href="#useroutes">useRoutes</a></li>
+        <li><a href="#outlet">Outlet</a></li>
+        <li><a href="#usenavigate">useNavigate</a></li>
+        <li><a href="#link">Link</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="322">3.22</h2>
+<blockquote>
+<p>主要内容：</p>
+<ul>
+<li>浏览器内置的导航相关 api</li>
+<li>history 库介绍</li>
+<li><a href="mailto:react-router@6.22" rel="">react-router@6.22</a>部分组件的实现介绍</li>
+</ul>
+</blockquote>
+<h1 id="前置知识">前置知识</h1>
+<h2 id="浏览器-api">浏览器 api</h2>
+<blockquote>
+<p>我们在浏览器中实现的任何功能，底层一定都有对应的 api 支持。理解一个功能依赖的底层 api 是理解它的实现的第一步</p>
+</blockquote>
+<p>react-router 所依赖的浏览器 api 主要是以下两个</p>
+<ul>
+<li>window.history</li>
+<li>window.location.hash</li>
+</ul>
+<p>下面依次介绍</p>
+<h3 id="windowhistory">window.history</h3>
+<p><code>window.history</code> 是 JavaScript DOM（文档对象模型）中的一个对象，通过 History API 提供对浏览器会话历史记录的访问。History API 允许开发者操作浏览器的历史记录堆栈，其中包含用户访问过的 URL。</p>
+<p><code>window.history</code> 中我们主要用到的是以下两个方法</p>
+<ul>
+<li><code>window.history.pushState()</code>：向会话历史记录<strong>添加</strong>新状态，并更新当前页面的 URL。</li>
+<li><code>window.history.replaceState()</code>：使用新状态更新会话历史记录的当前状态，而<strong>不创建</strong>历史堆栈中的新条目。</li>
+</ul>
+<h4 id="对应事件">对应事件</h4>
+<p><code>window.onpopstate</code> ， 我们一般通过监听这个事件来实现导航对应的页面功能</p>
+<p>需要注意的是，在同一文档的两个记录条目之间会触发该事件，而 <code>history.pushState</code> 和 <code>histroy.replaceState()</code>都不会触发 <code>popstate</code> 事件</p>
+<p>我们在使用 history 模式下的路由时就会使用上述的几个 api 来进行路由的实现。</p>
+<h3 id="windowlocationhash">window.location.hash</h3>
+<p>这个属性表示的就是在一个路径中，#后面的内容</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-HTML" data-lang="HTML"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;myAnchor&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/zh-CN/docs/Location.href#Examples&#34;</span><span class="p">&gt;</span>Examples<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="kd">var</span> <span class="nx">anchor</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;myAnchor&#34;</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">anchor</span><span class="p">.</span><span class="nx">hash</span><span class="p">);</span> <span class="c1">// 返回&#39;#Examples&#39;
+</span><span class="c1"></span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div><p>我们可以通过 <code>window.location.hash</code>来获取到导航栏中 hash 的值，也可以通过上述代码得到一个标签的 hash 值。</p>
+<h4 id="对应事件-1">对应事件</h4>
+<p><code>hashchange</code> , 我们可以通过这个事件监听到 hash 的变化，从而完成对路由的响应。</p>
+<h2 id="history-库">history 库</h2>
+<p>它的作用可以引用官方的介绍：</p>
+<blockquote>
+<p><code>history库</code>可以令你更轻松地管理在<code>JavaScript</code>环境下运行的会话历史（<code>session history</code>）。一个<code>history</code>实例抽象了各种环境中的差异，且提供了最简洁的<code>API</code>去管理会话中的历史栈（<code>history stack</code>）、导航（<code>navigate</code>）以及持久化的状态（<code>persist state</code>）。</p>
+</blockquote>
+<ul>
+<li>history 库是 react-router 底层依赖的库，通过它实现对路径变化的响应。</li>
+<li>history 库主要提供了对上述浏览器 api 的封装，更方便对响应路径的变化</li>
+</ul>
+<blockquote>
+<p>详细解读可以阅读文末的参考文章</p>
+</blockquote>
+<h1 id="实现原理">实现原理</h1>
+<h2 id="基础部分">基础部分</h2>
+<h3 id="browserrouter">BrowserRouter</h3>
+<p>使用 React-router，第一步就是用 <code>BrowserRouter</code>来包裹入口组件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nt">React.StrictMode</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">BrowserRouter</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">App</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">BrowserRouter</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">React.StrictMode</span><span class="p">&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;root&#34;</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div><p>下面通过 Browser 的源码来分析其作用</p>
+<ul>
+<li>创建路由容器，将路由状态通过参数传递给<code>Router</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router-dom\index.tsx
+</span><span class="c1"></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">BrowserRouter</span><span class="p">({</span>
+  <span class="nx">basename</span><span class="p">,</span> <span class="c1">// 路由统一的前缀
+</span><span class="c1"></span>  <span class="nx">children</span><span class="p">,</span>
+  <span class="nb">window</span><span class="p">,</span> <span class="c1">// 指明要监控和操作哪个页面对象的路由变化。默认是window对象，但我们可以传入iframe对象
+</span><span class="c1"></span><span class="p">}</span><span class="o">:</span> <span class="nx">BrowserRouterProps</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// 创建ref对象historyRef,用于存储createBrowserHistory创建出来的会话历史管理实例
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">historyRef</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useRef</span><span class="p">&lt;</span><span class="nt">BrowserHistory</span><span class="p">&gt;();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">historyRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">historyRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">createBrowserHistory</span><span class="p">({</span> <span class="nb">window</span> <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">history</span> <span class="o">=</span> <span class="nx">historyRef</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="p">[</span><span class="nx">state</span><span class="p">,</span> <span class="nx">setState</span><span class="p">]</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useState</span><span class="p">({</span>
+    <span class="cm">/*
+</span><span class="cm">     * 到达当前路由的行为，有以下值：
+</span><span class="cm">     *    &#34;POP&#34;: 代表路由的变化是通过 history.go这类操作历史栈索引的API 或者 浏览器导航栏上的前进和后退键触发。
+</span><span class="cm">     *    &#34;PUSH&#34;: 代表路由的变化是通过 history.push 触发的
+</span><span class="cm">     *    &#34;REPLACE&#34;: 代表路由的变化是通过 history.replace 触发的
+</span><span class="cm">     */</span>
+    <span class="nx">action</span>: <span class="kt">history.action</span><span class="p">,</span>
+    <span class="cm">/**
+</span><span class="cm">     * 一个记录当前路由数据的对象，包含以下属性：
+</span><span class="cm">     *    pathname：等同于window.location.pathname
+</span><span class="cm">     *    search：等同于window.location.search
+</span><span class="cm">     *    hash：等同于window.location.hash
+</span><span class="cm">     *    state：当前路由地址的状态，类似但不等于window.history.state
+</span><span class="cm">     *    key：代表当前路由地址的唯一值
+</span><span class="cm">     */</span>
+    <span class="nx">location</span>: <span class="kt">history.location</span><span class="p">,</span>
+  <span class="p">});</span>
+  <span class="cm">/*
+</span><span class="cm">   *   useEffect 与 useLayoutEffect的区别：
+</span><span class="cm">   *   useEffect: 在react执行commit后，也就是页面渲染变化后执行
+</span><span class="cm">   *   useLayoutEffect: 在react执行commit前执行，会阻塞页面渲染变化
+</span><span class="cm">   */</span>
+  <span class="nx">React</span><span class="p">.</span><span class="nx">useLayoutEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">history</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">setState</span><span class="p">),</span> <span class="p">[</span><span class="nx">history</span><span class="p">]);</span>
+  <span class="c1">// 用Router组件传入一些参数且包裹着children返回出去
+</span><span class="c1"></span>  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">Router</span>
+      <span class="na">basename</span><span class="o">=</span><span class="p">{</span><span class="nx">basename</span><span class="p">}</span>
+      <span class="na">children</span><span class="o">=</span><span class="p">{</span><span class="nx">children</span><span class="p">}</span>
+      <span class="na">location</span><span class="o">=</span><span class="p">{</span><span class="nx">state</span><span class="p">.</span><span class="nx">location</span><span class="p">}</span>
+      <span class="na">navigationType</span><span class="o">=</span><span class="p">{</span><span class="nx">state</span><span class="p">.</span><span class="nx">action</span><span class="p">}</span>
+      <span class="na">navigator</span><span class="o">=</span><span class="p">{</span><span class="nx">history</span><span class="p">}</span>
+    <span class="p">/&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="router-组件">Router 组件</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router\index.tsx
+</span><span class="c1"></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">Router</span><span class="p">({</span>
+  <span class="nx">basename</span>: <span class="kt">basenameProp</span> <span class="o">=</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span>
+  <span class="nx">children</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nx">location</span>: <span class="kt">locationProp</span><span class="p">,</span> <span class="c1">// history.location
+</span><span class="c1"></span>  <span class="nx">navigationType</span> <span class="o">=</span> <span class="nx">NavigationType</span><span class="p">.</span><span class="nx">Pop</span><span class="p">,</span> <span class="c1">// history.action
+</span><span class="c1"></span>  <span class="nx">navigator</span><span class="p">,</span> <span class="c1">// history
+</span><span class="c1"></span>  <span class="kr">static</span><span class="o">:</span> <span class="nx">staticProp</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// 该属性在BrowserRouter上用不到
+</span><span class="c1"></span><span class="p">}</span><span class="o">:</span> <span class="nx">RouterProps</span><span class="p">)</span><span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactElement</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+  <span class="c1">// normalizePathname用于对basename格式化，如normalizePathname(&#39;//asd/&#39;)=&gt;&#39;/asd&#39;
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">basename</span> <span class="o">=</span> <span class="nx">normalizePathname</span><span class="p">(</span><span class="nx">basenameProp</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">navigationContext</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useMemo</span><span class="p">(</span>
+    <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">({</span> <span class="nx">basename</span><span class="p">,</span> <span class="nx">navigator</span><span class="p">,</span> <span class="kr">static</span><span class="o">:</span> <span class="nx">staticProp</span> <span class="p">}),</span>
+    <span class="p">[</span><span class="nx">basename</span><span class="p">,</span> <span class="nx">navigator</span><span class="p">,</span> <span class="nx">staticProp</span><span class="p">]</span>
+  <span class="p">);</span>
+  <span class="c1">// 如果locationProp为字符串则把他转为对象(包含pathname,search,state,key,hash)
+</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">locationProp</span> <span class="o">===</span> <span class="s2">&#34;string&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">locationProp</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">locationProp</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="p">{</span>
+    <span class="nx">pathname</span> <span class="o">=</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span>
+    <span class="nx">search</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+    <span class="nx">hash</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+    <span class="nx">state</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nx">key</span> <span class="o">=</span> <span class="s2">&#34;default&#34;</span><span class="p">,</span>
+  <span class="p">}</span> <span class="o">=</span> <span class="nx">locationProp</span><span class="p">;</span>
+  <span class="c1">// 此 location 与 locationProp 的区别在于pathname做了去掉basename的处理
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">location</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// trailingPathname为当前location.pathname中截掉basename的那部分，如
+</span><span class="c1"></span>    <span class="c1">// stripBasename(&#39;/prefix/a&#39;, &#39;/prefix&#39;) =&gt; &#39;/a&#39;
+</span><span class="c1"></span>    <span class="c1">// 如果basename为&#39;/&#39;，则不对pathname处理直接返回原值
+</span><span class="c1"></span>    <span class="kd">let</span> <span class="nx">trailingPathname</span> <span class="o">=</span> <span class="nx">stripBasename</span><span class="p">(</span><span class="nx">pathname</span><span class="p">,</span> <span class="nx">basename</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">trailingPathname</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">pathname</span>: <span class="kt">trailingPathname</span><span class="p">,</span>
+      <span class="nx">search</span><span class="p">,</span>
+      <span class="nx">hash</span><span class="p">,</span>
+      <span class="nx">state</span><span class="p">,</span>
+      <span class="nx">key</span><span class="p">,</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">basename</span><span class="p">,</span> <span class="nx">pathname</span><span class="p">,</span> <span class="nx">search</span><span class="p">,</span> <span class="nx">hash</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">key</span><span class="p">]);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">location</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// 最后返回被NavigationContext和LocationContext包裹着的children出去
+</span><span class="c1"></span>  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">NavigationContext.Provider</span> <span class="na">value</span><span class="o">=</span><span class="p">{</span><span class="nx">navigationContext</span><span class="p">}&gt;</span>
+      <span class="p">&lt;</span><span class="nt">LocationContext.Provider</span>
+        <span class="na">children</span><span class="o">=</span><span class="p">{</span><span class="nx">children</span><span class="p">}</span>
+        <span class="na">value</span><span class="o">=</span><span class="p">{{</span> <span class="nx">location</span><span class="p">,</span> <span class="nx">navigationType</span> <span class="p">}}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">NavigationContext.Provider</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/react-router-1.png"
+        data-srcset="/images/react-router-1.png, /images/react-router-1.png 1.5x, /images/react-router-1.png 2x"
+        data-sizes="auto"
+        alt="/images/react-router-1.png"
+        title="/images/react-router-1.png" /></p>
+<h3 id="useroutes">useRoutes</h3>
+<p>我们先使用 useRoutes 来改写我们的<code>App</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// 为了演示不同路由的效果，新建了Route1和Route2组件
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">Route1</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Route1</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="kr">const</span> <span class="nx">Route2</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Route2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="kr">const</span> <span class="nx">Page</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Page</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+
+<span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 通过把路由规则对象传入useRoutes，返回的是根据路由规则生成的Routes
+</span><span class="c1"></span>  <span class="c1">// 如果按照我们下面传的路由规则对象，则生成的Routes如下所示
+</span><span class="c1"></span>  <span class="cm">/**
+</span><span class="cm">   *  &lt;Routes&gt;
+</span><span class="cm">   *    &lt;Route path=&#34;/&#34; element={&lt;Page /&gt;}/&gt;
+</span><span class="cm">   *    &lt;Route path=&#34;/route1&#34; element={&lt;Route1 /&gt;} /&gt;
+</span><span class="cm">   *    &lt;Route path=&#34;/route2&#34; element={&lt;Route2 /&gt;} /&gt;
+</span><span class="cm">   *  &lt;/Routes&gt;
+</span><span class="cm">   */</span>
+  <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">useRoutes</span><span class="p">([</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Page</span> <span class="p">/&gt;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route1</span> <span class="p">/&gt;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route2</span> <span class="p">/&gt;</span> <span class="p">},</span>
+  <span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;{</span><span class="nx">element</span><span class="p">}&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="p">};</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</code></pre></div><p>可以达到和之前的写法一样的效果。</p>
+<p>那么，这样的效果是如何达到的呢，我们可以以这个例子从 <code>useRoutes</code>开始分析</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router\index.tsx
+</span><span class="c1"></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">useRoutes</span><span class="p">(</span>
+  <span class="nx">routes</span>: <span class="kt">RouteObject</span><span class="p">[],</span>
+  <span class="nx">locationArg?</span>: <span class="kt">Partial</span><span class="p">&lt;</span><span class="nt">Location</span><span class="p">&gt;</span> <span class="o">|</span> <span class="kt">string</span>
+<span class="p">)</span><span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactElement</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+  <span class="cm">/*
+</span><span class="cm">    RouteContext的声明代码为：
+</span><span class="cm">      const RouteContext = React.createContext&lt;RouteContextObject&gt;({
+</span><span class="cm">        outlet: null,
+</span><span class="cm">        matches: [],
+</span><span class="cm">      });
+</span><span class="cm">    由于在`BrowserRouter`中没有引用 RouteContext 的逻辑，因此此情况下解构取出的matches为空数组
+</span><span class="cm">  */</span>
+  <span class="kd">let</span> <span class="p">{</span> <span class="nx">matches</span>: <span class="kt">parentMatches</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useContext</span><span class="p">(</span><span class="nx">RouteContext</span><span class="p">);</span>
+  <span class="c1">// 此情况下routeMatch为undefined
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">routeMatch</span> <span class="o">=</span> <span class="nx">parentMatches</span><span class="p">[</span><span class="nx">parentMatches</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+  <span class="c1">// 此情况下parentParams为空对象
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">parentParams</span> <span class="o">=</span> <span class="nx">routeMatch</span> <span class="o">?</span> <span class="nx">routeMatch</span><span class="p">.</span><span class="nx">params</span> <span class="o">:</span> <span class="p">{};</span>
+  <span class="c1">// 此情况下parentPathname为&#34;/&#34;
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">parentPathname</span> <span class="o">=</span> <span class="nx">routeMatch</span> <span class="o">?</span> <span class="nx">routeMatch</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">;</span>
+  <span class="c1">// 此情况下parentPathnameBase为&#34;/&#34;
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">parentPathnameBase</span> <span class="o">=</span> <span class="nx">routeMatch</span> <span class="o">?</span> <span class="nx">routeMatch</span><span class="p">.</span><span class="nx">pathnameBase</span> <span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">;</span>
+  <span class="c1">// 此情况下parentRoute为false
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">parentRoute</span> <span class="o">=</span> <span class="nx">routeMatch</span> <span class="o">&amp;&amp;</span> <span class="nx">routeMatch</span><span class="p">.</span><span class="nx">route</span><span class="p">;</span>
+  <span class="cm">/*
+</span><span class="cm">    useLocation的代码如下所示：
+</span><span class="cm">      function useLocation(): Location {
+</span><span class="cm">        return React.useContext(LocationContext).location;
+</span><span class="cm">      }
+</span><span class="cm">    可看出该函数作用是用于取出LocationContext中的location
+</span><span class="cm">   */</span>
+  <span class="kd">let</span> <span class="nx">locationFromContext</span> <span class="o">=</span> <span class="nx">useLocation</span><span class="p">();</span>
+
+  <span class="c1">// 如果存在传入的locationArg，则此处的location为locationArg，否则是上面的locationFromContext
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">location</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">locationArg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">parsedLocationArg</span> <span class="o">=</span>
+      <span class="k">typeof</span> <span class="nx">locationArg</span> <span class="o">===</span> <span class="s2">&#34;string&#34;</span> <span class="o">?</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">locationArg</span><span class="p">)</span> <span class="o">:</span> <span class="nx">locationArg</span><span class="p">;</span>
+    <span class="nx">location</span> <span class="o">=</span> <span class="nx">parsedLocationArg</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">location</span> <span class="o">=</span> <span class="nx">locationFromContext</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">pathname</span> <span class="o">=</span> <span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">||</span> <span class="s2">&#34;/&#34;</span><span class="p">;</span>
+  <span class="c1">// 从location.pathname中截取父路由的pathname部分
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">remainingPathname</span> <span class="o">=</span>
+    <span class="nx">parentPathnameBase</span> <span class="o">===</span> <span class="s2">&#34;/&#34;</span>
+      <span class="o">?</span> <span class="nx">pathname</span>
+      : <span class="kt">pathname.slice</span><span class="p">(</span><span class="nx">parentPathnameBase</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">||</span> <span class="s2">&#34;/&#34;</span><span class="p">;</span>
+  <span class="cm">/*
+</span><span class="cm">    matchRoutes的TyprScript声明如下所示：
+</span><span class="cm">      declare function matchRoutes(
+</span><span class="cm">        routes: RouteObject[],
+</span><span class="cm">        location: Partial&lt;Location&gt; | string,
+</span><span class="cm">        basename?: string
+</span><span class="cm">      ): RouteMatch[] | null;
+</span><span class="cm">    该函数会从routes中找出所有匹配location的路由（包括父子路由），然后组成RouteMatch[]格式的数组返回出去
+</span><span class="cm">    RouteMatch的TyprScript声明如下所示：
+</span><span class="cm">      interface RouteMatch&lt;ParamKey extends string = string&gt; {
+</span><span class="cm">        params: Params&lt;ParamKey&gt;;
+</span><span class="cm">        pathname: string;
+</span><span class="cm">        route: RouteObject;
+</span><span class="cm">      }
+</span><span class="cm">    此函数的源码由于比较复杂，所以被放在源码分析（深入部分）的内容里分析：
+</span><span class="cm">   */</span>
+  <span class="kd">let</span> <span class="nx">matches</span> <span class="o">=</span> <span class="nx">matchRoutes</span><span class="p">(</span><span class="nx">routes</span><span class="p">,</span> <span class="p">{</span> <span class="nx">pathname</span>: <span class="kt">remainingPathname</span> <span class="p">});</span>
+  <span class="cm">/*
+</span><span class="cm">    _renderMatches其实就是renderMatches，其声明类型如下所示：
+</span><span class="cm">      declare function renderMatches(
+</span><span class="cm">        matches: RouteMatch[] | null
+</span><span class="cm">      ): React.ReactElement | null;
+</span><span class="cm">    其用于把 matchRoutes 函数返回的结果渲染成 React.ReactElement
+</span><span class="cm">    */</span>
+  <span class="k">return</span> <span class="nx">_renderMatches</span><span class="p">(</span>
+    <span class="c1">// 对matches进行增强处理
+</span><span class="c1"></span>    <span class="nx">matches</span> <span class="o">&amp;&amp;</span>
+      <span class="nx">matches</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">match</span><span class="p">)</span> <span class="o">=&gt;</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">match</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">params</span>: <span class="kt">Object.assign</span><span class="p">({},</span> <span class="nx">parentParams</span><span class="p">,</span> <span class="nx">match</span><span class="p">.</span><span class="nx">params</span><span class="p">),</span>
+          <span class="nx">pathname</span>: <span class="kt">joinPaths</span><span class="p">([</span><span class="nx">parentPathnameBase</span><span class="p">,</span> <span class="nx">match</span><span class="p">.</span><span class="nx">pathname</span><span class="p">]),</span>
+          <span class="nx">pathnameBase</span>:
+            <span class="kt">match.pathnameBase</span> <span class="o">===</span> <span class="s2">&#34;/&#34;</span>
+              <span class="o">?</span> <span class="nx">parentPathnameBase</span>
+              : <span class="kt">joinPaths</span><span class="p">([</span><span class="nx">parentPathnameBase</span><span class="p">,</span> <span class="nx">match</span><span class="p">.</span><span class="nx">pathnameBase</span><span class="p">]),</span>
+        <span class="p">})</span>
+      <span class="p">),</span>
+    <span class="nx">parentMatches</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>接下来就详细分析<code>useRoutes</code>中的<code>_renderMatches</code>函数。在路径名为<code>&quot;/route1&quot;</code>的情况下，此时<code>remainingPathname</code>为<code>&quot;/route1&quot;</code>，从 <code>matchRoutes(routes, { pathname: remainingPathname })</code>中得出<code>matches</code>的值如下所示:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nx">params</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+    <span class="nx">pathnameBase</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+    <span class="nx">route</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route1</span> <span class="p">/&gt;,</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">];</span>
+</code></pre></div><p>将<code>matches</code>带入到 <code>_renderMatches</code> 中进行分析：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="kd">function</span> <span class="nx">_renderMatches</span><span class="p">(</span>
+  <span class="nx">matches</span>: <span class="kt">RouteMatch</span><span class="p">[]</span> <span class="o">|</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nx">parentMatches</span>: <span class="kt">RouteMatch</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="p">)</span><span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactElement</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">matches</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">matches</span><span class="p">.</span><span class="nx">reduceRight</span><span class="p">((</span><span class="nx">outlet</span><span class="p">,</span> <span class="nx">match</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">RouteContext.Provider</span>
+        <span class="err">//</span> <span class="na">此情况下该值为</span><span class="err">&lt;</span><span class="na">Route1</span><span class="p">/&gt;</span>
+        <span class="nx">children</span><span class="o">=</span><span class="p">{</span>
+          <span class="nx">match</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">element</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">?</span> <span class="nx">match.route.element</span> : <span class="kt">outlet</span>
+        <span class="p">}</span>
+        <span class="cm">/*
+</span><span class="cm">          此情况下该值为:
+</span><span class="cm">            {
+</span><span class="cm">              outlet: null,
+</span><span class="cm">              matches: [
+</span><span class="cm">                {
+</span><span class="cm">                  params:{},
+</span><span class="cm">                  pathname: &#34;/route1&#34;,
+</span><span class="cm">                  pathnameBase: &#34;/route1&#34;,
+</span><span class="cm">                  route: {
+</span><span class="cm">                    element: &lt;Route1/&gt;,
+</span><span class="cm">                    path:&#34;/route1&#34;
+</span><span class="cm">                  }
+</span><span class="cm">                }
+</span><span class="cm">              ]
+</span><span class="cm">            }
+</span><span class="cm">        */</span>
+        <span class="nx">value</span><span class="o">=</span><span class="p">{{</span>
+          <span class="nx">outlet</span><span class="p">,</span>
+          <span class="nx">matches</span>: <span class="kt">parentMatches.concat</span><span class="p">(</span><span class="nx">matches</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="p">}}</span>
+      <span class="o">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">},</span> <span class="kc">null</span> <span class="kr">as</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactElement</span> <span class="o">|</span> <span class="kc">null</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><code>useRoutes</code>主要做了以下两件事：</p>
+<ol>
+<li>根据当前的路由<code>location</code>,从传入的<code>routes</code>中找出所有匹配的路由对象，放到数组<code>matches</code>里</li>
+<li>用<code>renderMatches</code>把<code>matches</code>渲染成一个<code>React</code>元素，期间会把<code>macthes</code>从尾到头遍历用<code>RouteContext</code>包裹起来，如下所示：</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/react-router-2.png"
+        data-srcset="/images/react-router-2.png, /images/react-router-2.png 1.5x, /images/react-router-2.png 2x"
+        data-sizes="auto"
+        alt="/images/react-router-2.png"
+        title="/images/react-router-2.png" /></p>
+<p>如果路由规则对象没有定义 <code>element</code> 属性，则 <code>RouteContext.Provider</code>的 children 会指向其自身的 <code>outlet</code>:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/react-router-3.png"
+        data-srcset="/images/react-router-3.png, /images/react-router-3.png 1.5x, /images/react-router-3.png 2x"
+        data-sizes="auto"
+        alt="/images/react-router-3.png"
+        title="/images/react-router-3.png" /></p>
+<h3 id="outlet">Outlet</h3>
+<p>上述情况都是在每个子路由里都没有子路由的情况下分析的。我们修改<code>App</code>的代码继续分析</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// Route1增加Outlet组件用于渲染匹配子路由对应的组件
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">Route1</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">(</span>
+  <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="nx">Route1</span>
+    <span class="p">&lt;</span><span class="nt">Outlet</span> <span class="p">/&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">);</span>
+<span class="kr">const</span> <span class="nx">Route2</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Route2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="kr">const</span> <span class="nx">Page</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Page</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+
+<span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">useRoutes</span><span class="p">([</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Page</span> <span class="p">/&gt;</span> <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+      <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route1</span> <span class="p">/&gt;,</span>
+      <span class="c1">// 新增子路由规则
+</span><span class="c1"></span>      <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+      <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route2</span> <span class="p">/&gt;</span> <span class="p">},</span>
+  <span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;{</span><span class="nx">element</span><span class="p">}&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="p">};</span>
+</code></pre></div><p>由前述可知，当路径名为<code>'/route1/name1'</code>时，在<code>useRoutes</code>中，<code>matchRoutes(routes, { pathname: remainingPathname })</code>中得出<code>matches</code>的值如下所示:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nx">params</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+    <span class="nx">pathnameBase</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+    <span class="nx">route</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+      <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route1</span> <span class="p">/&gt;,</span>
+      <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+      <span class="p">],</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="nx">params</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;/route1/name1&#34;</span><span class="p">,</span>
+    <span class="nx">pathnameBase</span><span class="o">:</span> <span class="s2">&#34;/route1/name1&#34;</span><span class="p">,</span>
+    <span class="nx">route</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span><span class="p">,</span>
+      <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;,</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">];</span>
+</code></pre></div><p>此时<code>useRoutes</code>返回的<code>React</code>元素如下所示：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/react-router-4.png"
+        data-srcset="/images/react-router-4.png, /images/react-router-4.png 1.5x, /images/react-router-4.png 2x"
+        data-sizes="auto"
+        alt="/images/react-router-4.png"
+        title="/images/react-router-4.png" /></p>
+<p>基于上述内容，分析<code>Outlet</code>源码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router\index.tsx
+</span><span class="c1"></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">Outlet</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">OutletProps</span><span class="p">)</span><span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactElement</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">useOutlet</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">context</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><code>Outlet</code>直接调用了<code>useOutlet</code>的结果，继续分析 <code>useOutlet</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router\index.tsx
+</span><span class="c1"></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">useOutlet</span><span class="p">(</span><span class="nx">context?</span>: <span class="kt">unknown</span><span class="p">)</span><span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactElement</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">outlet</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useContext</span><span class="p">(</span><span class="nx">RouteContext</span><span class="p">).</span><span class="nx">outlet</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">outlet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">OutletContext.Provider</span> <span class="na">value</span><span class="o">=</span><span class="p">{</span><span class="nx">context</span><span class="p">}&gt;{</span><span class="nx">outlet</span><span class="p">}&lt;/</span><span class="nt">OutletContext.Provider</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">outlet</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>这里可以看出，其实 <code>&lt;Outlet/&gt;</code>就是把当前 <code>RouterContext</code>的 <code>outlet</code>值渲染出来，如下所示</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/react-router-5.png"
+        data-srcset="/images/react-router-5.png, /images/react-router-5.png 1.5x, /images/react-router-5.png 2x"
+        data-sizes="auto"
+        alt="/images/react-router-5.png"
+        title="/images/react-router-5.png" /></p>
+<h3 id="usenavigate">useNavigate</h3>
+<p>在 <code>App</code> 和 <code>Route1</code> 中加入能<strong>更改路径名</strong>的按钮，如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="kr">const</span> <span class="nx">Route1</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 获取能改变路由的navigate函数
+</span><span class="c1"></span>  <span class="kr">const</span> <span class="nx">navigate</span> <span class="o">=</span> <span class="nx">useNavigate</span><span class="p">();</span>
+  <span class="c1">// 用于改变路由的函数
+</span><span class="c1"></span>  <span class="kr">const</span> <span class="nx">pushPage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">pathname</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">navigate</span><span class="p">(</span><span class="nx">pathname</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="nx">Route1</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">({</span> <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span> <span class="p">})}&gt;</span><span class="o">/</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">({</span> <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;name2&#34;</span> <span class="p">})}&gt;</span><span class="o">/</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">Outlet</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+<span class="kr">const</span> <span class="nx">Route2</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Route2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="kr">const</span> <span class="nx">Page</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Page</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+
+<span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">useRoutes</span><span class="p">([</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Page</span> <span class="p">/&gt;</span> <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+      <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route1</span> <span class="p">/&gt;,</span>
+      <span class="c1">// 新增子路由规则
+</span><span class="c1"></span>      <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+      <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route2</span> <span class="p">/&gt;</span> <span class="p">},</span>
+  <span class="p">]);</span>
+  <span class="c1">// 获取能改变路由的navigate函数
+</span><span class="c1"></span>  <span class="kr">const</span> <span class="nx">navigate</span> <span class="o">=</span> <span class="nx">useNavigate</span><span class="p">();</span>
+  <span class="c1">// 用于改变路由的函数
+</span><span class="c1"></span>  <span class="kr">const</span> <span class="nx">pushPage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">pathname</span>: <span class="kt">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">navigate</span><span class="p">(</span><span class="nx">pathname</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)}&gt;</span><span class="o">/</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">(</span><span class="s2">&#34;/route1&#34;</span><span class="p">)}&gt;</span><span class="o">/</span><span class="nx">route1</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">(</span><span class="s2">&#34;/route1/name1&#34;</span><span class="p">)}&gt;</span><span class="o">/</span><span class="nx">route1</span><span class="o">/</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">(</span><span class="s2">&#34;/route1/name2&#34;</span><span class="p">)}&gt;</span><span class="o">/</span><span class="nx">route1</span><span class="o">/</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">pushPage</span><span class="p">(</span><span class="s2">&#34;/route2&#34;</span><span class="p">)}&gt;</span><span class="o">/</span><span class="nx">route2</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+      <span class="p">{</span><span class="nx">element</span><span class="p">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div><p>至于为什么要在<code>Route1</code>和<code>App</code>里都用上<code>useNavigate</code>，是因为<code>useNavigate</code>在<strong>路由函数组件</strong>(被<code>RouteContext.Provider</code>包裹的组件，如<code>&lt;Route1/&gt;</code>)和<strong>非路由函数组件</strong>（如<code>&lt;App/&gt;</code>）有不同的执行逻辑。这样子有利于我们在分析<code>useNavigate</code>源码时做横向对比。</p>
+<p><code>navigate</code>有如下特点</p>
+<ol>
+<li><code>navigate</code>可以传入对象或者字符串，都可以达到改变路由的效果</li>
+<li><code>navigate</code>传入对象时，其<code>pathname</code>实相对于当前路由的<code>pathname</code>变化的</li>
+</ol>
+<p>下面来分析 <code>useNavigate</code> 内部的执行逻辑</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">useNavigate</span><span class="p">()</span><span class="o">:</span> <span class="nx">NavigateFunction</span> <span class="p">{</span>
+  <span class="c1">// 在BrowserRouter中，用NavigationContext包裹着children，
+</span><span class="c1"></span>  <span class="c1">// 其中basename为BrowserRouter中的basename，navigator为createBrowserHistory创建出的history
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="p">{</span> <span class="nx">basename</span><span class="p">,</span> <span class="nx">navigator</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useContext</span><span class="p">(</span><span class="nx">NavigationContext</span><span class="p">);</span>
+  <span class="c1">// 在&lt;App/&gt;中，matches是空数组。
+</span><span class="c1"></span>  <span class="c1">// 在&lt;Route1/&gt;中，matches是[ RouteMatch(对应Route1) ]
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="p">{</span> <span class="nx">matches</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useContext</span><span class="p">(</span><span class="nx">RouteContext</span><span class="p">);</span>
+  <span class="c1">// 把hsitory.location.pathname的值赋给locationPathname
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="p">{</span> <span class="nx">pathname</span>: <span class="kt">locationPathname</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useLocation</span><span class="p">();</span>
+  <span class="c1">// 在&lt;App/&gt;中，routePathnamesJson为&#34;[]&#34;。
+</span><span class="c1"></span>  <span class="c1">// 在&lt;Route1/&gt;中，routePathnamesJson为&#39;[&#34;/route1&#34;]&#39;。
+</span><span class="c1"></span>  <span class="c1">// 这里用字符串而非数组的格式是为了下面由useCallback生成的navigate不会因为其值的变化而变化
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">routePathnamesJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+    <span class="nx">matches</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">match</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">match</span><span class="p">.</span><span class="nx">pathnameBase</span><span class="p">)</span>
+  <span class="p">);</span>
+  <span class="c1">// 标志位，在初次渲染之前activeRef为false，其余情况为true
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">activeRef</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useRef</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="nx">React</span><span class="p">.</span><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">activeRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">});</span>
+
+  <span class="kd">let</span> <span class="nx">navigate</span>: <span class="kt">NavigateFunction</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useCallback</span><span class="p">(</span>
+    <span class="p">(</span><span class="nx">to</span>: <span class="kt">To</span> <span class="o">|</span> <span class="kt">number</span><span class="p">,</span> <span class="nx">options</span>: <span class="kt">NavigateOptions</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// 如果调度所在的函数组件还没初次渲染，则不走下面的流程
+</span><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">activeRef</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+      <span class="c1">// 如果传入参数是数字类型数据如navigate(-1)，则调用go函数(即history.go)
+</span><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">to</span> <span class="o">===</span> <span class="s2">&#34;number&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">navigator</span><span class="p">.</span><span class="nx">go</span><span class="p">(</span><span class="nx">to</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="cm">/*
+</span><span class="cm">        resolveTo的作用可以参考useResolvedPath(https://reactrouter.com/docs/en/v6/api#useresolvedpath),
+</span><span class="cm">        useResolvedPath内部其实也是调用了resolveTo。其作用在于把to变量转换为数据结构为
+</span><span class="cm">        {hash:string,search:string,pathname:string}的path变量，以作为形参被navigate.push和navigate.replace调用。
+</span><span class="cm">        关于resolveTo的详细分析我在分析完 useNavigate 后的内容里补充呈现。
+</span><span class="cm">      */</span>
+      <span class="kd">let</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">resolveTo</span><span class="p">(</span>
+        <span class="nx">to</span><span class="p">,</span>
+        <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">routePathnamesJson</span><span class="p">),</span>
+        <span class="nx">locationPathname</span>
+      <span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">basename</span> <span class="o">!==</span> <span class="s2">&#34;/&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// const joinPaths = (paths: string[]): string =&gt; paths.join(&#34;/&#34;).replace(/\/\/+/g, &#34;/&#34;);
+</span><span class="c1"></span>        <span class="nx">path</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="nx">joinPaths</span><span class="p">([</span><span class="nx">basename</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">pathname</span><span class="p">]);</span>
+      <span class="p">}</span>
+      <span class="c1">// 根据navigate中的第二形参是否带{repalce: true}来决定调用history.push还是history.replace
+</span><span class="c1"></span>      <span class="p">(</span><span class="o">!!</span><span class="nx">options</span><span class="p">.</span><span class="nx">replace</span> <span class="o">?</span> <span class="nx">navigator.replace</span> : <span class="kt">navigator.push</span><span class="p">)(</span>
+        <span class="nx">path</span><span class="p">,</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">state</span>
+      <span class="p">);</span>
+    <span class="p">},</span>
+    <span class="p">[</span><span class="nx">basename</span><span class="p">,</span> <span class="nx">navigator</span><span class="p">,</span> <span class="nx">routePathnamesJson</span><span class="p">,</span> <span class="nx">locationPathname</span><span class="p">]</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nx">navigate</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>从<code>useNavigate</code>得知，其内部逻辑主要用于处理<code>to</code>（即第一形参）的格式：</p>
+<ol>
+<li>如果<code>to</code>是<code>number</code>类型数据，则调用<code>history.go</code>处理</li>
+<li>如果<code>to</code>是<code>string</code>或<code>object</code>类型数据，则通过<code>resolveTo</code>把其转换为<code>Path</code>类型的数据然后调用<code>history.push</code>或<code>history.replace</code>处理。</li>
+</ol>
+<p>而<code>navigate</code>自身只是用于无刷新地改变路由。但因为在<code>BrowserRouter</code>中有这部分逻辑：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">BrowserRouter</span><span class="p">({</span>
+  <span class="nx">basename</span><span class="p">,</span>
+  <span class="nx">children</span><span class="p">,</span>
+  <span class="nb">window</span><span class="p">,</span>
+<span class="p">}</span><span class="o">:</span> <span class="nx">BrowserRouterProps</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...省略其他代码
+</span><span class="c1"></span>  <span class="nx">React</span><span class="p">.</span><span class="nx">useLayoutEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">history</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">setState</span><span class="p">),</span> <span class="p">[</span><span class="nx">history</span><span class="p">]);</span>
+  <span class="c1">// ...省略其他代码
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>而<code>history.go</code>、<code>hsitory.push</code>、<code>hsitory.replace</code>在执行后都会触发执行<code>history.listen</code>中注册的函数，而<code>setState</code>的执行会让<code>BrowserRouter</code>及其<code>children</code>更新，从而让页面响应式变化。</p>
+<p>现在就来看看 useNavigate 中用到的 resolveTo 函数， 从 TypeScript 的语法来看，该函数是把传入的变量从 To 声明类型转换成 Path 声明类型。To 和 Path 的声明类型如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="kr">export</span> <span class="kr">declare</span> <span class="kr">type</span> <span class="nx">To</span> <span class="o">=</span> <span class="kt">string</span> <span class="o">|</span> <span class="nx">PartialPath</span><span class="p">;</span>
+<span class="kr">type</span> <span class="nx">PartialPath</span> <span class="o">=</span> <span class="nx">Partial</span><span class="p">&lt;</span><span class="nt">Path</span><span class="p">&gt;</span>
+
+<span class="kr">export</span> <span class="kr">interface</span> <span class="nx">Path</span> <span class="p">{</span>
+  <span class="nx">pathname</span>: <span class="kt">Pathname</span><span class="p">;</span>
+  <span class="nx">search</span>: <span class="kt">Search</span><span class="p">;</span>
+  <span class="nx">hash</span>: <span class="kt">Hash</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">export</span> <span class="kr">declare</span> <span class="kr">type</span> <span class="nx">Pathname</span> <span class="o">=</span> <span class="kt">string</span><span class="p">;</span>
+<span class="kr">export</span> <span class="kr">declare</span> <span class="kr">type</span> <span class="nx">Search</span> <span class="o">=</span> <span class="kt">string</span><span class="p">;</span>
+<span class="kr">export</span> <span class="kr">declare</span> <span class="kr">type</span> <span class="nx">Hash</span> <span class="o">=</span> <span class="kt">string</span><span class="p">;</span>
+</code></pre></div><p><strong>除了转换成**</strong><code>Path</code>*<strong>*声明类型的数据</strong>，<code>resolveTo</code>函数还有一个更重要的作用：<strong>重点处理**</strong><code>to.pathname</code>*<strong>*中涉及到相对路径的写法</strong>。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router\index.tsx
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">resolveTo</span><span class="p">(</span>
+  <span class="nx">toArg</span>: <span class="kt">To</span><span class="p">,</span>
+  <span class="c1">// 即matches.map((match) =&gt; match.pathnameBase)，macthes从当前RouteContext中取出
+</span><span class="c1"></span>  <span class="nx">routePathnames</span>: <span class="kt">string</span><span class="p">[],</span>
+  <span class="c1">// 即location.pathname
+</span><span class="c1"></span>  <span class="nx">locationPathname</span>: <span class="kt">string</span>
+<span class="p">)</span><span class="o">:</span> <span class="nx">Path</span> <span class="p">{</span>
+  <span class="c1">// parsePath引用自history库，用于把路径字符串转换为Path类型的数据
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">to</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">toArg</span> <span class="o">===</span> <span class="s2">&#34;string&#34;</span> <span class="o">?</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">toArg</span><span class="p">)</span> <span class="o">:</span> <span class="nx">toArg</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">toPathname</span> <span class="o">=</span> <span class="nx">toArg</span> <span class="o">===</span> <span class="s2">&#34;&#34;</span> <span class="o">||</span> <span class="nx">to</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">===</span> <span class="s2">&#34;&#34;</span> <span class="o">?</span> <span class="s2">&#34;/&#34;</span> <span class="o">:</span> <span class="nx">to</span><span class="p">.</span><span class="nx">pathname</span><span class="p">;</span>
+
+  <span class="c1">// 官方注释：
+</span><span class="c1"></span>  <span class="c1">//   If a pathname is explicitly provided in `to`, it should be relative to the
+</span><span class="c1"></span>  <span class="c1">//   route context. This is explained in `Note on `&lt;Link to&gt;` values` in our
+</span><span class="c1"></span>  <span class="c1">//   migration guide from v5 as a means of disambiguation between `to` values
+</span><span class="c1"></span>  <span class="c1">//   that begin with `/` and those that do not. However, this is problematic for
+</span><span class="c1"></span>  <span class="c1">//   `to` values that do not provide a pathname. `to` can simply be a search or
+</span><span class="c1"></span>  <span class="c1">//   hash string, in which case we should assume that the navigation is relative
+</span><span class="c1"></span>  <span class="c1">//   to the current location&#39;s pathname and *not* the route pathname.
+</span><span class="c1"></span>  <span class="c1">// 从官方注释可知：
+</span><span class="c1"></span>  <span class="c1">//    1. 如果to.pathname被定义了，则该值是相对于当前路由上下文去运行的。
+</span><span class="c1"></span>  <span class="c1">//    2. 而且存在一种情况是to没有定义pathname而是定义了hash或search，这种情况下也是可以运行的，此时会基于当前路由而变化
+</span><span class="c1"></span>  <span class="c1">// 由于to.pathname可以用相对路径的写法。因此需要from记录把哪个路由作为起点进行跳转的，
+</span><span class="c1"></span>  <span class="c1">// 这里把from记录的路由成为“基准路由”
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="kr">from</span><span class="o">:</span> <span class="kt">string</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">toPathname</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">from</span> <span class="o">=</span> <span class="nx">locationPathname</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// routePathnameIndex用于记录“基准路由”是取自routePathnames的第几个元素
+</span><span class="c1"></span>    <span class="kd">let</span> <span class="nx">routePathnameIndex</span> <span class="o">=</span> <span class="nx">routePathnames</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">toPathname</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">&#34;..&#34;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">toSegments</span> <span class="o">=</span> <span class="nx">toPathname</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">);</span>
+
+      <span class="c1">// Each leading .. segment means &#34;go up one route&#34; instead of &#34;go up one
+</span><span class="c1"></span>      <span class="c1">// URL segment&#34;.  This is a key difference from how &lt;a href&gt; works and a
+</span><span class="c1"></span>      <span class="c1">// major reason we call this a &#34;to&#34; value instead of a &#34;href&#34;.
+</span><span class="c1"></span>      <span class="c1">// 从官方注释可知，&#34;..&#34;代表以父路由路径名为基准进行跳转。可以有多个&#34;..&#34;合并使用例如&#34;../../&#34;
+</span><span class="c1"></span>      <span class="c1">// 处理to.pathname中的&#34;..&#34;情况，每当存在一个&#34;..&#34;，则routePathnameIndex减1
+</span><span class="c1"></span>      <span class="k">while</span> <span class="p">(</span><span class="nx">toSegments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="s2">&#34;..&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">toSegments</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+        <span class="nx">routePathnameIndex</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nx">to</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="nx">toSegments</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// If there are more &#34;..&#34; segments than parent routes, resolve relative to
+</span><span class="c1"></span>    <span class="c1">// the root / URL.
+</span><span class="c1"></span>    <span class="c1">// 如果to.pathname中的&#34;..&#34;太多导致routePathnameIndex&lt;0，则from取根目录
+</span><span class="c1"></span>    <span class="kr">from</span> <span class="o">=</span> <span class="nx">routePathnameIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">routePathnames</span><span class="p">[</span><span class="nx">routePathnameIndex</span><span class="p">]</span> <span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="cm">/*
+</span><span class="cm">    resolvePath是一个对外export的API（https://reactrouter.com/docs/en/v6/api#resolvepath）
+</span><span class="cm">    其声明类型如下：
+</span><span class="cm">      declare function resolvePath(
+</span><span class="cm">        to: To,
+</span><span class="cm">        fromPathname?: string
+</span><span class="cm">      ): Path;
+</span><span class="cm">    其作用在于根据to和from生成一个pathname为绝对路径的Path类型变量，
+</span><span class="cm">    为什么需要pathname为绝对路径？
+</span><span class="cm">      因为打最后我们调用navigator.push或navigator.replace时，传入的Path类型变量的pathname只能是绝对路径
+</span><span class="cm">      react-router中的navigate支持其形参中pathname为相对路径或绝对路径，
+</span><span class="cm">      但history.push和history.replace只支持其形参中的pathname为绝对路径
+</span><span class="cm">  */</span>
+  <span class="kd">let</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">resolvePath</span><span class="p">(</span><span class="nx">to</span><span class="p">,</span> <span class="kr">from</span><span class="p">);</span>
+
+  <span class="c1">// Ensure the pathname has a trailing slash if the original to value had one.
+</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span>
+    <span class="nx">toPathname</span> <span class="o">&amp;&amp;</span>
+    <span class="nx">toPathname</span> <span class="o">!==</span> <span class="s2">&#34;/&#34;</span> <span class="o">&amp;&amp;</span>
+    <span class="nx">toPathname</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+    <span class="o">!</span><span class="nx">path</span><span class="p">.</span><span class="nx">pathname</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">+=</span> <span class="s2">&#34;/&#34;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">path</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="link">Link</h3>
+<p>我们继续在上面的 App 的基础上去修改，把 <code>&lt;button/&gt;</code> 改为 <code>&lt;Link /&gt;</code>， 如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="kr">const</span> <span class="nx">Route1</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="nx">Route1</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">{</span><span class="cm">/* &lt;button onClick={() =&gt; pushPage({ pathname: &#39;name1&#39; })}&gt;/name1&lt;/button&gt;
+</span><span class="cm">        &lt;button onClick={() =&gt; pushPage({ pathname: &#39;name2&#39; })}&gt;/name2&lt;/button&gt; */</span><span class="p">}</span>
+        <span class="p">{</span><span class="cm">/*换成Link*/</span><span class="p">}</span>
+        <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="p">{{</span> <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span> <span class="p">}}&gt;{</span><span class="sb">`{pathname: &#39;name1&#39;}`</span><span class="p">}&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span><span class="o">&amp;</span><span class="nx">emsp</span><span class="p">;</span>
+        <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="p">{{</span> <span class="nx">pathname</span><span class="o">:</span> <span class="s2">&#34;name2&#34;</span> <span class="p">}}&gt;{</span><span class="sb">`{pathname: &#39;name2&#39;}`</span><span class="p">}&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">Outlet</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+<span class="kr">const</span> <span class="nx">Route2</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Route2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+<span class="kr">const</span> <span class="nx">Page</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">Page</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;;</span>
+
+<span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">useRoutes</span><span class="p">([</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Page</span> <span class="p">/&gt;</span> <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route1&#34;</span><span class="p">,</span>
+      <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route1</span> <span class="p">/&gt;,</span>
+      <span class="c1">// 新增子路由规则
+</span><span class="c1"></span>      <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name1&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;name2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> <span class="p">},</span>
+      <span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span> <span class="nx">path</span><span class="o">:</span> <span class="s2">&#34;/route2&#34;</span><span class="p">,</span> <span class="nx">element</span><span class="o">:</span> <span class="p">&lt;</span><span class="nt">Route2</span> <span class="p">/&gt;</span> <span class="p">},</span>
+  <span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">{</span><span class="cm">/* &lt;button onClick={() =&gt; pushPage(&#39;/&#39;)}&gt;/&lt;/button&gt;
+</span><span class="cm">      &lt;button onClick={() =&gt; pushPage(&#39;/route1&#39;)}&gt;/route1&lt;/button&gt;
+</span><span class="cm">      &lt;button onClick={() =&gt; pushPage(&#39;/route1/name1&#39;)}&gt;/route1/name1&lt;/button&gt;
+</span><span class="cm">      &lt;button onClick={() =&gt; pushPage(&#39;/route1/name2&#39;)}&gt;/route1/name2&lt;/button&gt;
+</span><span class="cm">      &lt;button onClick={() =&gt; pushPage(&#39;/route2&#39;)}&gt;/route2&lt;/button&gt; */</span><span class="p">}</span>
+      <span class="p">{</span><span class="cm">/*换成Link*/</span><span class="p">}</span>
+      <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="s">&#34;/&#34;</span><span class="p">&gt;</span><span class="o">/</span><span class="p">&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span><span class="o">&amp;</span><span class="nx">emsp</span><span class="p">;</span>
+      <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="s">&#34;/route1&#34;</span><span class="p">&gt;</span><span class="o">/</span><span class="nx">route1</span><span class="p">&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span><span class="o">&amp;</span><span class="nx">emsp</span><span class="p">;</span>
+      <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="s">&#34;/route1/name1&#34;</span><span class="p">&gt;</span><span class="o">/</span><span class="nx">route1</span><span class="o">/</span><span class="nx">name1</span><span class="p">&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span><span class="o">&amp;</span><span class="nx">emsp</span><span class="p">;</span>
+      <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="s">&#34;/route1/name2&#34;</span><span class="p">&gt;</span><span class="o">/</span><span class="nx">route1</span><span class="o">/</span><span class="nx">name2</span><span class="p">&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span><span class="o">&amp;</span><span class="nx">emsp</span><span class="p">;</span>
+      <span class="p">&lt;</span><span class="nt">Link</span> <span class="na">to</span><span class="o">=</span><span class="s">&#34;/route2&#34;</span><span class="p">&gt;</span><span class="o">/</span><span class="nx">route2</span><span class="p">&lt;/</span><span class="nt">Link</span><span class="p">&gt;</span><span class="o">&amp;</span><span class="nx">emsp</span><span class="p">;</span>
+      <span class="p">{</span><span class="nx">element</span><span class="p">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div><p>接下来我们基于上面的例子来学习 <code>Link</code> 的源码，在学习之前，我们需要先了解 <code>Link</code> 源码中重点用到的两个函数 <code>useHref</code> 和 <code>useLinkClickHandler</code></p>
+<ul>
+<li>useHref</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router\index.tsx
+</span><span class="c1"></span><span class="cm">/*
+</span><span class="cm">  https://reactrouter.com/docs/en/v6/api#usehref
+</span><span class="cm">  官方解释：该API用于根据给定的to变量生成一个可以跳转到指定路由的URL字符串
+</span><span class="cm">*/</span>
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">useHref</span><span class="p">(</span><span class="nx">to</span>: <span class="kt">To</span><span class="p">)</span><span class="o">:</span> <span class="kt">string</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="p">{</span> <span class="nx">basename</span><span class="p">,</span> <span class="nx">navigator</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useContext</span><span class="p">(</span><span class="nx">NavigationContext</span><span class="p">);</span>
+  <span class="cm">/*
+</span><span class="cm">    https://reactrouter.com/docs/en/v6/api#useresolvedpath
+</span><span class="cm">    useResolvedPath的作用和resolveTo一样（useResolvedPath内部就是调用了resolveTo且返回该函数的处理结果）
+</span><span class="cm">    即根据给定的to变量返回Path类型的变量，其中会处理to.pathname的相对路径写法。
+</span><span class="cm">  */</span>
+  <span class="kd">let</span> <span class="p">{</span> <span class="nx">hash</span><span class="p">,</span> <span class="nx">pathname</span><span class="p">,</span> <span class="nx">search</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useResolvedPath</span><span class="p">(</span><span class="nx">to</span><span class="p">);</span>
+
+  <span class="kd">let</span> <span class="nx">joinedPathname</span> <span class="o">=</span> <span class="nx">pathname</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">basename</span> <span class="o">!==</span> <span class="s2">&#34;/&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/*
+</span><span class="cm">      getToPathname作用在于从给定to获取pathname，源码如下所示：
+</span><span class="cm">        function getToPathname(to: To): string | undefined {
+</span><span class="cm">          // Empty strings should be treated the same as / paths
+</span><span class="cm">          return to === &#34;&#34; || (to as Path).pathname === &#34;&#34;
+</span><span class="cm">            ? &#34;/&#34;
+</span><span class="cm">            : typeof to === &#34;string&#34;
+</span><span class="cm">            ? parsePath(to).pathname
+</span><span class="cm">            : to.pathname;
+</span><span class="cm">        }
+</span><span class="cm">    */</span>
+    <span class="kd">let</span> <span class="nx">toPathname</span> <span class="o">=</span> <span class="nx">getToPathname</span><span class="p">(</span><span class="nx">to</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">endsWithSlash</span> <span class="o">=</span> <span class="nx">toPathname</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">toPathname</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">);</span>
+    <span class="nx">joinedPathname</span> <span class="o">=</span>
+      <span class="nx">pathname</span> <span class="o">===</span> <span class="s2">&#34;/&#34;</span>
+        <span class="o">?</span> <span class="nx">basename</span> <span class="o">+</span> <span class="p">(</span><span class="nx">endsWithSlash</span> <span class="o">?</span> <span class="s2">&#34;/&#34;</span> <span class="o">:</span> <span class="s2">&#34;&#34;</span><span class="p">)</span>
+        <span class="c1">// const joinPaths = (paths: string[]): string =&gt; paths.join(&#34;/&#34;).replace(/\/\/+/g, &#34;/&#34;);
+</span><span class="c1"></span>        <span class="o">:</span> <span class="nx">joinPaths</span><span class="p">([</span><span class="nx">basename</span><span class="p">,</span> <span class="nx">pathname</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="c1">// 使用history.createHref(https://github.com/remix-run/history/blob/main/docs/api-reference.md#historycreatehrefto-to)把To类型变量转变成URL字符串，
+</span><span class="c1"></span>  <span class="c1">// 因为hsitory.createHref不具备支持basename和to.pathname的相对路径写法。因此有了上面的处理这两者的逻辑
+</span><span class="c1"></span>  <span class="k">return</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">createHref</span><span class="p">({</span> <span class="nx">pathname</span>: <span class="kt">joinedPathname</span><span class="p">,</span> <span class="nx">search</span><span class="p">,</span> <span class="nx">hash</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div><ul>
+<li>useLinkClickHandler</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages\react-router-dom\index.tsx
+</span><span class="c1"></span><span class="cm">/*
+</span><span class="cm">  https://reactrouter.com/docs/en/v6/api#uselinkclickhandler
+</span><span class="cm">  官方解释：该API用于生成一个用于导航的点击事件，这个点击事件用于自定义的`&lt;Link/&gt;`组件
+</span><span class="cm">*/</span>
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">useLinkClickHandler</span><span class="p">&lt;</span><span class="nt">E</span> <span class="na">extends</span> <span class="na">Element </span><span class="o">=</span> <span class="na">HTMLAnchorElement</span><span class="p">&gt;(</span>
+  <span class="nx">to</span>: <span class="kt">To</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="nx">target</span><span class="p">,</span>
+    <span class="nx">replace</span>: <span class="kt">replaceProp</span><span class="p">,</span>
+    <span class="nx">state</span><span class="p">,</span>
+  <span class="p">}</span><span class="o">:</span> <span class="p">{</span>
+    <span class="c1">// React.HTMLAttributeAnchorTarget声明类型：type HTMLAttributeAnchorTarget = &#39;_self&#39; | &#39;_blank&#39; | &#39;_parent&#39; | &#39;_top&#39;  | (string &amp; {});（与a标签的target一样）
+</span><span class="c1"></span>    <span class="nx">target?</span>: <span class="kt">React.HTMLAttributeAnchorTarget</span><span class="p">;</span>
+    <span class="c1">// 定义跳转的行为是PUSH还是REPLACE
+</span><span class="c1"></span>    <span class="nx">replace?</span>: <span class="kt">boolean</span><span class="p">;</span>
+    <span class="c1">// 跳转的时候可以在此定义即将跳转的路由的location.state
+</span><span class="c1"></span>    <span class="nx">state?</span>: <span class="kt">any</span><span class="p">;</span>
+  <span class="p">}</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">)</span><span class="o">:</span> <span class="p">(</span><span class="nx">event</span>: <span class="kt">React.MouseEvent</span><span class="p">&lt;</span><span class="nt">E</span><span class="err">,</span> <span class="na">MouseEvent</span><span class="p">&gt;)</span> <span class="o">=&gt;</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">navigate</span> <span class="o">=</span> <span class="nx">useNavigate</span><span class="p">();</span>
+  <span class="kd">let</span> <span class="nx">location</span> <span class="o">=</span> <span class="nx">useLocation</span><span class="p">();</span>
+  <span class="c1">// useResolvedPath在上面已经介绍过了，这里就不再重复介绍了
+</span><span class="c1"></span>  <span class="kd">let</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">useResolvedPath</span><span class="p">(</span><span class="nx">to</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="nx">React</span><span class="p">.</span><span class="nx">useCallback</span><span class="p">(</span>
+    <span class="p">(</span><span class="nx">event</span>: <span class="kt">React.MouseEvent</span><span class="p">&lt;</span><span class="nt">E</span><span class="err">,</span> <span class="na">MouseEvent</span><span class="p">&gt;)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span>
+        <span class="cm">/*
+</span><span class="cm">          MouseEvent.button是只读属性，它返回一个number类型值来代表什么键被操作，例如：
+</span><span class="cm">            0：主按键，通常指鼠标左键或默认值（译者注：如document.getElementById(&#39;a&#39;).click()这样触发就会是默认值）
+</span><span class="cm">            1：辅助按键，通常指鼠标滚轮中键
+</span><span class="cm">          更多内容可看：https://developer.mozilla.org/zh-CN/docs/Web/API/MouseEvent/button
+</span><span class="cm">        */</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">button</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span>
+        <span class="c1">// 如果target已被定义且并非_self值，则执行默认事件
+</span><span class="c1"></span>        <span class="p">(</span><span class="o">!</span><span class="nx">target</span> <span class="o">||</span> <span class="nx">target</span> <span class="o">===</span> <span class="s2">&#34;_self&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="cm">/*
+</span><span class="cm">          isModifiedEvent用于检测该事件是否是鼠标 + 键盘键一并触发
+</span><span class="cm">          isModifiedEvent源码：
+</span><span class="cm">            function isModifiedEvent(event: React.MouseEvent) {
+</span><span class="cm">              return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+</span><span class="cm">            }
+</span><span class="cm">        */</span>
+        <span class="o">!</span><span class="nx">isModifiedEvent</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span>
+      <span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 阻止a标签被点击后默认事件的执行
+</span><span class="c1"></span>        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+
+        <span class="cm">/*
+</span><span class="cm">          replace变量用于决定此次跳转行为是PUSH还是REPLACE，
+</span><span class="cm">          其中createPath(location) === createPath(path)的逻辑是，如果新路由的url与当前路由的一致，则使用REPLACE
+</span><span class="cm">          此处createPath其实是history.createPath，用于给定的Partial&lt;Path&gt;类型的变量生成URL字符串，官方地址：
+</span><span class="cm">            https://github.com/remix-run/history/tree/main/docs/api-reference.md#createpath
+</span><span class="cm">        */</span>
+        <span class="kd">let</span> <span class="nx">replace</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">replaceProp</span> <span class="o">||</span> <span class="nx">createPath</span><span class="p">(</span><span class="nx">location</span><span class="p">)</span> <span class="o">===</span> <span class="nx">createPath</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+
+        <span class="nx">navigate</span><span class="p">(</span><span class="nx">to</span><span class="p">,</span> <span class="p">{</span> <span class="nx">replace</span><span class="p">,</span> <span class="nx">state</span> <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">[</span><span class="nx">location</span><span class="p">,</span> <span class="nx">navigate</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">replaceProp</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">to</span><span class="p">]</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>在有了上面两个函数之后，我们就可以来分析 <code>Link</code> 组件的代码了</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-TypeScript" data-lang="TypeScript"><span class="c1">// packages/react-router-dom/index.tsx
+</span><span class="c1"></span><span class="kr">export</span> <span class="kr">const</span> <span class="nx">Link</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">forwardRef</span><span class="p">&lt;</span><span class="nt">HTMLAnchorElement</span><span class="err">,</span> <span class="na">LinkProps</span><span class="p">&gt;(</span>
+  <span class="kd">function</span> <span class="nx">LinkWithRef</span><span class="p">(</span>
+    <span class="p">{</span> <span class="nx">onClick</span><span class="p">,</span> <span class="nx">reloadDocument</span><span class="p">,</span> <span class="nx">replace</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="p">...</span><span class="nx">rest</span> <span class="p">},</span>
+    <span class="nx">ref</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">href</span> <span class="o">=</span> <span class="nx">useHref</span><span class="p">(</span><span class="nx">to</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">internalOnClick</span> <span class="o">=</span> <span class="nx">useLinkClickHandler</span><span class="p">(</span><span class="nx">to</span><span class="p">,</span> <span class="p">{</span> <span class="nx">replace</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">target</span> <span class="p">});</span>
+    <span class="kd">function</span> <span class="nx">handleClick</span><span class="p">(</span>
+      <span class="nx">event</span>: <span class="kt">React.MouseEvent</span><span class="p">&lt;</span><span class="nt">HTMLAnchorElement</span><span class="err">,</span> <span class="na">MouseEvent</span><span class="p">&gt;</span>
+    <span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// 如果Link中还定义了onClick，则先执行onClick中定义的事件
+</span><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="nx">onClick</span><span class="p">)</span> <span class="nx">onClick</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+      <span class="c1">// event.defaultPrevented 返回一个布尔值，表明当前事件是否调用了 event.preventDefault()方法。
+</span><span class="c1"></span>      <span class="c1">// 因为onClick定义的事件里可能调用了event.preventDefault，因此这里做个判断
+</span><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">event</span><span class="p">.</span><span class="nx">defaultPrevented</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">reloadDocument</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">internalOnClick</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">a</span>
+        <span class="p">{</span><span class="na">...rest</span><span class="p">}</span>
+        <span class="na">href</span><span class="o">=</span><span class="p">{</span><span class="nx">href</span><span class="p">}</span>
+        <span class="na">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleClick</span><span class="p">}</span>
+        <span class="na">ref</span><span class="o">=</span><span class="p">{</span><span class="nx">ref</span><span class="p">}</span>
+        <span class="na">target</span><span class="o">=</span><span class="p">{</span><span class="nx">target</span><span class="p">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div><p>当<!-- raw HTML omitted --> 被点击时，它会调用 <code>navigate</code> 去跳转路由（除非指定特定参数使其不跳转），而从<code>useNavigate</code>的分析中，我们知道调用<code>navigate</code>会间接的触发页面响应式更新，也就实现了路由的跳转功能。</p>
+<h2 id="总结">总结</h2>
+<p>简单来说，react-router 的实现主要需要以下几点：</p>
+<ul>
+<li><code>history</code>库，用于监听和表示浏览器的路径状态</li>
+<li>通过<code>Context</code>来实现父子组件之间数据的传递，这里传递的是路由的信息和路由方法</li>
+<li>通过顶层的<code>setState</code>来实现响应路径变化，并触发页面的更新</li>
+<li>通过高阶组件来完成各个组件之间的逻辑传递和拓展</li>
+<li>对各种边界情况的判断和处理</li>
+</ul>
+<h1 id="参考文章">参考文章</h1>
+<blockquote>
+<p><a href="https://juejin.cn/post/7192479334962528317#comment" target="_blank" rel="noopener noreffer ">搞不懂路由跳转?带你了解 history.js 实现原理 - 掘金</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/History_API" target="_blank" rel="noopener noreffer ">History API - Web API 接口参考 | MDN</a></p>
+<p><a href="https://juejin.cn/post/7192479334962528317#comment" target="_blank" rel="noopener noreffer ">搞不懂路由跳转?带你了解 history.js 实现原理 - 掘金</a></p>
+<p><a href="https://juejin.cn/post/7021799679616614436" target="_blank" rel="noopener noreffer ">react-routerV6 依赖的 history 库源码分析 - 掘金</a></p>
+<p><a href="https://juejin.cn/post/7075146381907722276" target="_blank" rel="noopener noreffer ">简单易懂地剖析 React-RouterV6 源码(代码示例+画图总结) - 掘金</a></p>
+</blockquote>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-03-27</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" data-title="React—router实现分析" data-hashtags="技术分享,React"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" data-hashtag="技术分享"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" data-title="React—router实现分析"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" data-title="React—router实现分析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/posts/reactrouter%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" data-title="React—router实现分析"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>,&nbsp;<a href="/tags/react/">React</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6-shardingjdbc/" class="prev" rel="prev" title="数据库中间件--ShardingJDBC(附小demo)"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>数据库中间件--ShardingJDBC(附小demo)</a>
+            <a href="/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="next" rel="next" title="Mit6.824 MapReduce概念及Lab1的实现">Mit6.824 MapReduce概念及Lab1的实现<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.90.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2021 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
