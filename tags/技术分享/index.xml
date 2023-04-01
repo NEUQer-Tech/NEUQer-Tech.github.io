@@ -3,7 +3,15 @@
         <title>技术分享 - 标签 - 不洗碗工作室公共博客</title>
         <link>http://example.org/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/</link>
         <description>技术分享 - 标签 - 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 27 Mar 2023 23:50:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 01 Apr 2023 20:31:50 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" rel="self" type="application/rss+xml" /><item>
+    <title>Webpack实现概述</title>
+    <link>http://example.org/posts/webpack%E5%AE%9E%E7%8E%B0%E6%A6%82%E8%BF%B0/</link>
+    <pubDate>Sat, 01 Apr 2023 20:31:50 &#43;0800</pubDate>
+    <author>柯昌鹏</author>
+    <guid>http://example.org/posts/webpack%E5%AE%9E%E7%8E%B0%E6%A6%82%E8%BF%B0/</guid>
+    <description><![CDATA[背景 虽然现在前端工程化发展迅猛，对应框架的各种脚手架工具已经覆盖了我们开发时的基本需求，大多数时候代码的构建、打包已经不需要我们自己手动去做]]></description>
+</item>
+<item>
     <title>Mit6.824 MapReduce概念及Lab1的实现</title>
     <link>http://example.org/posts/mit6.824-mapreduce%E6%A6%82%E5%BF%B5%E5%8F%8Alab1%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
     <pubDate>Mon, 27 Mar 2023 23:50:34 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <author>黄一珂</author>
     <guid>http://example.org/posts/%E5%88%9D%E8%AF%86three.js/</guid>
     <description><![CDATA[初识Three.js 1.引言 Three.js是基于原生WebGL封装运行的三维引擎，在所有WebGL引擎中，Three.js是国内文资料最多]]></description>
-</item>
-<item>
-    <title>Java流式编程的艺术</title>
-    <link>http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/</link>
-    <pubDate>Sun, 09 Jan 2022 19:03:17 &#43;0800</pubDate>
-    <author>朱坤帅</author>
-    <guid>http://example.org/posts/java%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/</guid>
-    <description><![CDATA[特性 流不存储元素，但是可以根据需要进行计算转化 流的数据可以来自数据结构、数组、文件等 支持多种聚合操作，如fliter/map/reduce/]]></description>
 </item>
 </channel>
 </rss>

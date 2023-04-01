@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>前端工程化 - 标签 - 不洗碗工作室公共博客</title>
+        <link>http://example.org/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/</link>
+        <description>前端工程化 - 标签 - 不洗碗工作室公共博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 01 Apr 2023 20:31:50 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="self" type="application/rss+xml" /><item>
+    <title>Webpack实现概述</title>
+    <link>http://example.org/posts/webpack%E5%AE%9E%E7%8E%B0%E6%A6%82%E8%BF%B0/</link>
+    <pubDate>Sat, 01 Apr 2023 20:31:50 &#43;0800</pubDate>
+    <author>柯昌鹏</author>
+    <guid>http://example.org/posts/webpack%E5%AE%9E%E7%8E%B0%E6%A6%82%E8%BF%B0/</guid>
+    <description><![CDATA[背景 虽然现在前端工程化发展迅猛，对应框架的各种脚手架工具已经覆盖了我们开发时的基本需求，大多数时候代码的构建、打包已经不需要我们自己手动去做]]></description>
+</item>
+</channel>
+</rss>
