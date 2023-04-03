@@ -3,9 +3,17 @@
         <title>不洗碗工作室公共博客</title>
         <link>http://example.org/</link>
         <description>This is my cool site</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 01 Apr 2023 20:31:50 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 03 Apr 2023 22:37:22 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Mit6.824 Raft概念及Lab2A的实现</title>
+    <link>http://example.org/posts/mit6.824-raft%E6%A6%82%E5%BF%B5%E5%8F%8Alab2a%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+    <pubDate>Mon, 03 Apr 2023 22:37:22 &#43;0800</pubDate>
+    <author>高昆</author>
+    <guid>http://example.org/posts/mit6.824-raft%E6%A6%82%E5%BF%B5%E5%8F%8Alab2a%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+    <description><![CDATA[@[TOC] 0. 分布式共识算法Raft 一个更易理解的共识算法(论文原文为In Search of an Understandable Consensus Algorithm) 0.1 什么是分布式共识问题? 分布式环境下系统集群存在很多节点，每个节]]></description>
+</item>
+<item>
     <title>Webpack实现概述</title>
     <link>http://example.org/posts/webpack%E5%AE%9E%E7%8E%B0%E6%A6%82%E8%BF%B0/</link>
     <pubDate>Sat, 01 Apr 2023 20:31:50 &#43;0800</pubDate>
@@ -76,14 +84,6 @@
     <author>季炜浩</author>
     <guid>http://example.org/posts/%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83/</guid>
     <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>深入理解MySQL索引</title>
-    <link>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</link>
-    <pubDate>Fri, 14 Jan 2022 23:27:15 &#43;0800</pubDate>
-    <author>秦海棋</author>
-    <guid>http://example.org/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3mysql%E7%B4%A2%E5%BC%95/</guid>
-    <description><![CDATA[什么是索引 索引其实就是一种存储结构，对数据库中的特定列的数值进行排序，并且提供指向列中数值的指针，来完成快速查询。类似于图书的目录，在数据量]]></description>
 </item>
 </channel>
 </rss>
