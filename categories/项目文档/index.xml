@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>项目文档 - 分类 - 不洗碗工作室公共博客</title>
+        <link>http://example.org/categories/%E9%A1%B9%E7%9B%AE%E6%96%87%E6%A1%A3/</link>
+        <description>项目文档 - 分类 - 不洗碗工作室公共博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 19 Apr 2023 14:54:57 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E9%A1%B9%E7%9B%AE%E6%96%87%E6%A1%A3/" rel="self" type="application/rss+xml" /><item>
+    <title>Odin低代码平台文档</title>
+    <link>http://example.org/posts/odin%E4%BD%8E%E4%BB%A3%E7%A0%81%E5%B9%B3%E5%8F%B0%E6%96%87%E6%A1%A3/</link>
+    <pubDate>Wed, 19 Apr 2023 14:54:57 &#43;0800</pubDate>
+    <author>卞仁平</author>
+    <guid>http://example.org/posts/odin%E4%BD%8E%E4%BB%A3%E7%A0%81%E5%B9%B3%E5%8F%B0%E6%96%87%E6%A1%A3/</guid>
+    <description><![CDATA[Odin低代码平台文档 odin站群系统 odin-server odin服务端 架构 代码分包 COLA架构 领域驱动模型图 接口文档 https://www.apifox.cn/apidoc/shared-41e5b884-c128-4f53-9599-f097f08b91fc 技术栈 整体架构 COLA 官方文档 Github 权限控制 jCasbin 官]]></description>
+</item>
+</channel>
+</rss>
