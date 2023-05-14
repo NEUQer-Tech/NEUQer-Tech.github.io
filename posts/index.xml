@@ -3,7 +3,15 @@
         <title>所有文章 - 不洗碗工作室公共博客</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 19 Apr 2023 14:54:57 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 14 May 2023 14:41:44 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>GRPC简介</title>
+    <link>http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/</link>
+    <pubDate>Sun, 14 May 2023 14:41:44 &#43;0800</pubDate>
+    <author>姜如潇</author>
+    <guid>http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/</guid>
+    <description><![CDATA[1. 计算机通信协议 根据OSI(Open System Interconnection)参考模型，计算机或通信系统间互联的标准体系有七层： 1.物理层：将数据转]]></description>
+</item>
+<item>
     <title>Odin低代码平台文档</title>
     <link>http://example.org/posts/odin%E4%BD%8E%E4%BB%A3%E7%A0%81%E5%B9%B3%E5%8F%B0%E6%96%87%E6%A1%A3/</link>
     <pubDate>Wed, 19 Apr 2023 14:54:57 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <author>黄一珂</author>
     <guid>http://example.org/posts/%E7%AE%80%E8%B0%88%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%B8%B2%E6%9F%93/</guid>
     <description><![CDATA[1.从Chrome架构来看浏览器工作内容 1.前言 ​ 如果我们想要设计高性能的web应用，或者是优化现有的web应用，就应当了解浏览器中的浏览器]]></description>
-</item>
-<item>
-    <title>ES从入门到入坟</title>
-    <link>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</link>
-    <pubDate>Sun, 13 Feb 2022 18:54:43 &#43;0800</pubDate>
-    <author>姚辉</author>
-    <guid>http://example.org/posts/es%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9D%9F/</guid>
-    <description><![CDATA[@[TOC] 一.elasticsearch简介 Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎]]></description>
 </item>
 </channel>
 </rss>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>GRPC简介 - 不洗碗工作室公共博客</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="GRPC简介" />
+<meta property="og:description" content="1. 计算机通信协议 根据OSI(Open System Interconnection)参考模型，计算机或通信系统间互联的标准体系有七层： 1.物理层：将数据转" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-05-14T14:41:44+08:00" />
+<meta property="article:modified_time" content="2023-05-14T14:41:44+08:00" /><meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GRPC简介"/>
+<meta name="twitter:description" content="1. 计算机通信协议 根据OSI(Open System Interconnection)参考模型，计算机或通信系统间互联的标准体系有七层： 1.物理层：将数据转"/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" /><link rel="prev" href="http://example.org/posts/odin%E4%BD%8E%E4%BB%A3%E7%A0%81%E5%B9%B3%E5%8F%B0%E6%96%87%E6%A1%A3/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "GRPC简介",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/grpc%E7%AE%80%E4%BB%8B\/"
+        },"genre": "posts","keywords": "技术分享, RPC, gRPC","wordcount":  5315 ,
+        "url": "http:\/\/example.org\/posts\/grpc%E7%AE%80%E4%BB%8B\/","datePublished": "2023-05-14T14:41:44+08:00","dateModified": "2023-05-14T14:41:44+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "姜如潇"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="不洗碗工作室公共博客">My cool site</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="不洗碗工作室公共博客">My cool site</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">GRPC简介</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>姜如潇</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>分布式</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-14">2023-05-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5315 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h4 id="1-计算机通信协议">1. 计算机通信协议</h4>
+<p>根据<code>OSI(Open System Interconnection)</code>参考模型，计算机或通信系统间互联的标准体系有七层：</p>
+<p>1.物理层：将数据转换为可通过物理介质传送的0和1电子信号，管理通信设备和网络媒体之间的互联互通。通俗来说就是将电脑连接起来的物理手段，包括光缆、电缆、无线电等。</p>
+<p>2.数据链路层：决定访问网络介质的方式，可以提供介质访问、链路管理等，常见的比如以太网、网卡、交换机、<code>PPTP</code>(点对点隧道协议，<code>Point to Point Tunneling Protocol</code>)、<code>L2TP</code>(第二层隧道协议，<code>Layer Two Tunneling Protocol</code>)等。</p>
+<p>3.网络层：负责<code>IP</code>选址与路由选择，它可以为报文或通信子网选择最适当的路径，控制数据链路层与传输层之间的信息转发，建立、维持和终止网络的连接，常见的比如<code>IP</code>(<code>IPV4</code>/<code>IPV6</code>，互联网协议)、<code>ICMP</code>(互联网控制信息协议)、<code>IGMP</code>(组管理协议)。</p>
+<p>4.传输层：提供终端到终端的可靠连接，用于数据通信，可以为会话层与网络层提供端到端可靠透明的数据传输服务，确保数据能完整被传输到网络层。常见的比如<code>TCP</code>(控制传输协议，<code>Transmission Control Protocol</code>)、<code>UDP</code>(用户数据报协议、<code>User Datagram Protocol</code>)。</p>
+<p>5.会话层：创建、管理和维护会话，它可以接收来自传输层的数据，建立、管理和终止表示层实体之间的通信会话。常见的有<code>SSL</code>(安全套接字层协议)、<code>TLS</code>(安全传输层协议)。</p>
+<p>6.表示层：负责数据编码、格式转换与数据加密，可以提供各种用于应用层数据的编码和转换功能，确保一个系统的应用层发送的数据能被另一个系统的应用层识别。常见的比如<code>LPP</code>(轻量级表示协议)。</p>
+<p>7.应用层：为应用程序或用户请求提供各种请求服务，可以为计算机用户、各种应用程序以及网络提供接口，也为用户直接提供各种网络服务。常见的比如<code>HTTP</code>(超文本传输协议)、<code>HTTPS</code>(超文本传输安全协议)、<code>DNS</code>(域名系统)、<code>FTP</code>(文本传输协议)。</p>
+<h4 id="2-rpc">2. <code>RPC</code></h4>
+<p>大多数的计算机通信协议都基于<code>TCP</code>或<code>UDP</code>协议生成，它们是计算机网络中最常用的两种传输层协议，可以提供不同的数据传输方式以满足不同的应用需求。</p>
+<p><code>TCP</code>的三个特点是面向连接、可靠、基于字节流（顺便一提，<code>UDP</code>的三个特点是无连接、不可靠、面向数据报），但使用纯裸<code>TCP</code>容易出现粘包问题等，需要在它的基础上加入一些自定义规则用于区分消息边界。例如常见的可以将消息包装成消息头+消息体的形式：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="%5cimages%5c1.jpg"
+        data-srcset="%5cimages%5c1.jpg, %5cimages%5c1.jpg 1.5x, %5cimages%5c1.jpg 2x"
+        data-sizes="auto"
+        alt="\images\1.jpg"
+        title="\images\1.jpg" /></p>
+<p>这其中消息头可以包含多种信息，例如完整的包长度、消息体是否被压缩过、消息体格式等等，只要通信体系的上下游均约定好特定的消息头，就可以实现互认，这也就是所谓的协议。也正是由此，基于<code>TCP</code>衍生出众多协议，其中就包含多种<code>RPC</code>协议。</p>
+<p>准确来说，<code>RPC</code>(远程过程调用，<code>Remote Procedure Call</code>)本身并不是一个具体的协议，而是一种调用方式，它可以帮助我们调用远程计算机上某个服务的方法，使得调用远程方法与调用本地方法一样简单。举例而言，如果有两个不同的服务<code>A</code>、<code>B</code>，它们分别部署在不同的机器上，此时若要在服务<code>A</code>中调用服务<code>B</code>中的某个方法，就可以使用<code>RPC</code>。</p>
+<p><code>RPC</code>的原理图如下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="%5cimages%5c2.jpg"
+        data-srcset="%5cimages%5c2.jpg, %5cimages%5c2.jpg 1.5x, %5cimages%5c2.jpg 2x"
+        data-sizes="auto"
+        alt="\images\2.jpg"
+        title="\images\2.jpg" /></p>
+<p>我们可以将整个框架看作五个主要部分：</p>
+<p>1.客户端(服务消费端，<code>client</code>)：调用远程方法的一段。</p>
+<p>2.客户端桩(<code>client stub</code>)：其实就是一个代理类，可以把客户端调用的方法、类、方法参数等信息传递到服务端。</p>
+<p>3.网络传输：可以把客户端调用的方法信息等各种参数传输到服务端，服务端执行完后再把结果传输回客户端。网络传输的实现方式有很多，例如<code>Socket</code>、<code>Netty</code>(推荐)等。</p>
+<p>4.服务端桩(<code>server stub</code>)：这里并不是代理类，服务端桩实际指的是接收到客户端执行方法的请求后，去执行对应的方法然后返回结果给客户端的类。</p>
+<p>5.服务端(服务提供端，<code>server</code>)：提供远程方法的一段。</p>
+<p>整个<code>RPC</code>执行的流程如下：</p>
+<p>1.客户端以本地调用的方式调用远程远程服务。</p>
+<p>2.客户端桩接收到调用指令后将方法、参数等组装成能够进行网络传输的消息体（序列化）：<code>RpcRequest</code>。</p>
+<p>3.客户端桩找到远端服务的地址，并利用网络传输将消息发送到服务提供段。</p>
+<p>4.服务端桩接收到消息后将消息反序列化为<code>Java</code>对象：<code>RpcRequest</code>。</p>
+<p>5.服务端桩根据<code>RpcRequest</code>中的类、方法、方法参数等信息调用本地的方法。</p>
+<p>6.服务端桩得到方法执行结果并将其组装成能够进行网络传输的消息体：<code>RpcResponse</code>（序列化）发送至客户端。</p>
+<p>7.客户端桩接收到消息并将消息反序列化为<code>Java</code>对象：<code>RpcResponse</code>，得到最终的结果并发送给客户端。</p>
+<p>有不少框架的实现都基于<code>RPC</code>调用方式：常见的比如<code>Dubbo</code>、<code>Thrift</code>、<code>Motan</code>、<code>gRPC</code>等。</p>
+<p>注意：</p>
+<p>1.<code>RPC</code>并不是协议，而是一种调用方式，<code>RPC</code>的具体实现比如<code>Dubbo</code>、<code>gRPC</code>等框架才是协议。</p>
+<p>2.<code>RPC</code>的实现方式有很多（也就是基于<code>RPC</code>实现方式的框架数量很多），因此不是所有的都基于<code>TCP</code>协议，例如<code>RESTful API</code>是基于<code>HTTP</code>协议的<code>RPC</code>框架，<code>gRPC</code>既可以基于<code>TCP</code>也可以基于<code>UDP</code>。当然，绝大多数<code>RPC</code>协议都是基于<code>TCP</code>协议的，原因是<code>TCP</code>协议提供了可靠、面向连接、流式的传输服务，适合在大部分场景下使用。</p>
+<h4 id="3-grpc">3. <code>gRPC</code></h4>
+<p><code>gRPC</code>(<code>Google Remote Procedure Call</code>)是一个高性能、通用的开源<code>RPC</code>框架，面向移动和<code>HTTP/2</code>设计，由<code>Google</code>公司于2015年开发，它支持多种编程语言与底层协议，并且可以提供强大的<code>IDL</code>(交互式数据语言)语言和代码生成工具。它使用基于<code>Protocol Buffers</code>的<code>IDL</code>语言来定义服务接口和数据类型，并使用底层协议来实现跨语言的<code>RPC</code>通信。<code>gRPC</code>基于<code>HTTP/2</code>标准设计，带来注入双向流、流控、头部压缩、单<code>TCP</code>连接上的多复用请求等特性，这使得它在移动设备上表现的更好，更节省电与空间占用。</p>
+<p>概括下来，<code>gRPC</code>主要包括以下特点：</p>
+<p>1.高性能：<code>gRPC</code>使用基于<code>HTTP/2</code>的二进制编码协议，可以提供更高的传输效率和可靠性。</p>
+<p>2.跨语言支持：<code>gPRC</code>支持多种语言，包括<code>C++</code>、<code>Java</code>、<code>Python</code>、<code>Go</code>、<code>Kotlin</code>、<code>PHP</code>、<code>Node.js</code>、<code>C#</code>等。</p>
+<p>3.强类型<code>IDL</code>：<code>gRPC</code>使用<code>Protocol Buffers</code>作为<code>IDL</code>语言，可以定义服务接口和数据类型，并生成对应的代码，可以简化开发者的工作。</p>
+<p>4.流式处理：<code>gRPC</code>支持流式处理，可以实现服务器端流式和客户端流式，适用于大数据量的场景。</p>
+<p>5.安全性：<code>gPRC</code>支持<code>TLS/SSL</code>加密协议，可以保证数据的安全性和完整性。</p>
+<p><a href="https://grpc.io/" target="_blank" rel="noopener noreffer "><code>gRPC</code>官方网站</a></p>
+<p><a href="https://github.com/grpc/grpc" target="_blank" rel="noopener noreffer "><code>gRPC</code>的<code>GitHub</code>仓库</a></p>
+<p><a href="https://doc.oschina.net/grpc" target="_blank" rel="noopener noreffer "><code>gRPC</code>官方文档中文翻译版</a></p>
+<p>由于<code>gRPC</code>是一种<code>PRC</code>框架，因此它的具体运行流程也与<code>RPC</code>框架类似：</p>
+<p>定义一个服务端，指定其能够被远程调用的方法（包括参数和返回类型）。在服务端实现这个接口，并运行一个<code>gRPC</code>服务器(<code>gRPC Server</code>)来处理客户端的调用，在客户端中有一个<code>gPRC</code>桩(<code>gRPC Stub</code>)提供与服务器相同的方法。</p>
+<p><code>gRPC</code>客户端和服务端可以在多种环境中运行和交互，并且可以使用任何<code>gRPC</code>支持的语言编写。你可以选择用<code>Java</code>编写<code>gRPC</code>服务端，同时可以用<code>Go</code>、<code>Python</code>等其他语言创建客户端。此外，<code>Google</code>最新的<code>API</code>也包含了<code>gRPC</code>版本的接口，可以让使用者较为容易的将<code>Google</code>的功能集成入应用中。</p>
+<p><code>gRPC</code>采用名为协议缓冲区(<code>Protocol Buffers</code>，可以简称为<code>ProtoBuf</code>)的开放源代码技术，提供极为高效且不受平台影响的序列化格式，用于序列化服务相互发送的结构化消息。它与<code>XML</code>和<code>JSON</code>类似，是一种更加灵活高效的数据格式，可以用于通讯协议、数据存储等领域，基本支持所有主流编程语言且与平台无关，在一些高性能且对响应速度有要求的数据传输场景非常使用。</p>
+<p><code>ProtoBuf</code>在<code>gRPC</code>框架中可以起到的作用有：定义数据结构、定义服务接口、通过序列化与反序列化方式提升传输效率。</p>
+<p>在使用<code>XML</code>、<code>JSON</code>进行数据编译时，数据文本格式更容易阅读，但进行数据交换时，设备就需要耗费大量的<code>CPU</code>在<code>I/O</code>操作上，这样会影响整个传输效率。但<code>ProtoBuf</code>不同于它们，它会将字符串进行序列化后再进行传输，即二进制数据。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="%5cimages%5c4.png"
+        data-srcset="%5cimages%5c4.png, %5cimages%5c4.png 1.5x, %5cimages%5c4.png 2x"
+        data-sizes="auto"
+        alt="\images\4.png"
+        title="\images\4.png" /></p>
+<p>可以看出二者的内容差异并不大，但是<code>ProtoBuf</code>的编码内容只是提供给操作者阅读的，实际传输的并不是以这种文本形式，而是序列化后的二进制数据，字节数会比<code>JSON</code>于<code>XML</code>的字节数少的多，速率更快。</p>
+<p>与采用文本格式的<code>JSON</code>相比，采用二进制格式的<code>ProtoBuf</code>在速度上可以达到前者的5倍。</p>
+<p>基于<code>ProtoBuf</code>，可以得到<code>gRPC</code>开发的核心：<code>.proto</code>文件，它定义了<code>gRPC</code>服务和消息的约定。根据这个文件，<code>gRPC</code>框架可以生成服务基类，消息以及完整的客户端代码。</p>
+<p>通过在服务端于客户端之间共享<code>.proto</code>文件，可以从端到端生成消息和客户端代码。生成客户端代码可以消除客户端和服务器上的重复消息，并为用户创建一个强类型的客户端，这样可以在具有较多服务和应用程序中节省大量开发时间。</p>
+<p><a href="https://protobuf.dev/" target="_blank" rel="noopener noreffer ">Protocol Buffers官方文档</a></p>
+<p><a href="https://github.com/protocolbuffers/protobuf" target="_blank" rel="noopener noreffer ">Protocol Buffers的<code>GitHub</code>仓库</a></p>
+<p>gRPC大致的请求流程如下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="%5cimages%5c3.png"
+        data-srcset="%5cimages%5c3.png, %5cimages%5c3.png 1.5x, %5cimages%5c3.png 2x"
+        data-sizes="auto"
+        alt="\images\3.png"
+        title="\images\3.png" /></p>
+<p>1.客户端中的<code>gRPC</code>桩(<code>gRPC Stub</code>)调用一个方法<code>A</code>，发起<code>RPC</code>调用请求。</p>
+<p>2.<code>gPRC</code>桩对请求信息使用<code>ProtoBuf</code>进行对象序列化压缩(<code>IDL</code>)，得到<code>Proto Request</code>。</p>
+<p>3.<code>gRPC</code>服务端(<code>gRPC Server</code>)接收到请求后，解码请求体，进行业务逻辑处理并返回。</p>
+<p>4.<code>gRPC</code>服务端对响应结果使用<code>ProtoBuf</code>进行对象序列化压缩(<code>IDL</code>)，得到<code>Proto Response</code>。</p>
+<p>5.客户端中的<code>gRPC</code>桩接收到<code>Proto Response</code>，解码请求体，回调被调用的方法<code>A</code>，唤醒正在等待响应（阻塞）的客户端调用并返回响应结果</p>
+<h4 id="4grpc的使用场景">4.<code>gRPC</code>的使用场景</h4>
+<p>补充：架构的演进</p>
+<p>1.单体架构</p>
+<p>2.垂直架构：将单体架构中的多个模块差分成多个独立项目，形成多个独立的单体架构。</p>
+<p>3.分布式架构：在垂直架构的基础上，将公共业务模块抽取出来，作为独立的服务，提供给其他调用者消费，以实现服务的共享与重用。</p>
+<p>4.<code>SOA</code>架构(<code>Service-Oriented Architecture</code>，面向服务架构)：将应用程序的不同功能单元（服务）进行拆分，并通过这些服务之间定义良好的接口和契约联系起来。核心部分是<code>ESB</code>(<code>Enterparise Service Bus</code>，企业服务总线)，它是服务中介，主要提供服务与服务之间的交互，它的功能包括：负载均衡、流量控制、加密处理、服务监控、异常处理、监控告急等。</p>
+<p>5.微服务架构：<code>SOA</code>架构的升华，强调的重点是“业务需要彻底的组件化和服务化”，原有的单个业务系统会被拆分为多个可以独立开发、设计、运行的小应用，这些小应用之间通过服务完成交互和集成。</p>
+<p><code>Dubbo</code>可以说是<code>SOA</code>时代的产物，而<code>gRPC</code>、<code>Spring Cloud</code>是微服务时代的产物。</p>
+<p>根据<code>gRPC</code>的特点，相比<code>Dubbo</code>与<code>Spring Cloud</code>，<code>gRPC</code>更适合以下场景：</p>
+<ol>
+<li>高性能要求：<code>gRPC</code>采用基于<code>HTTP/2</code>协议的二进制传输格式，具有更高的性能和更好的扩展性，适合对性能要求较高的场景。</li>
+<li>跨语言支持：<code>gRPC</code>支持多种编程语言和平台，可以轻松地实现跨语言的<code>RPC</code>调用，适合多语言环境的场景。</li>
+<li>复杂的数据结构：<code>gRPC</code>使用<code>Protocol Buffers</code>作为标准的接口定义语言（<code>IDL</code>），支持复杂的数据结构和数据类型，适合处理复杂的业务需求。</li>
+<li>网络传输安全：<code>gRPC</code>支持基于<code>TLS</code>的网络传输安全，可以确保数据的安全性，适合对数据安全性要求较高的场景。</li>
+<li>云原生应用：<code>gRPC</code>是云原生应用的重要组成部分，它可以为云原生应用提供高效的服务调用和通信机制，适合云原生应用的场景。</li>
+</ol>
+<p>相比<code>Dubbo</code>与<code>Spring Cloud</code>，<code>gRPC</code>的劣势主要包括以下几点：</p>
+<ol>
+<li>
+<p>学习成本高：<code>gRPC</code>使用<code>Protocol Buffers</code>作为标准的<code>IDL</code>和数据交换格式，对于开发者来说需要学习新的技术栈，包括<code>Protocol Buffers</code>的语法和使用，以及<code>gRPC</code>框架的使用和配置，学习成本相对较高。</p>
+</li>
+<li>
+<p>生态系统相对不成熟：相比于<code>Dubbo</code>和<code>Spring Cloud</code>，<code>gRPC</code>在国内的生态系统相对较新，社区和开发者数量相对较少，相关的开源项目和工具也相对较少，可能会对开发和部署带来一些不便。</p>
+</li>
+<li>
+<p>服务治理能力相对较弱：<code>gRPC</code>的服务治理能力相对于<code>Dubbo</code>和<code>Spring Cloud</code>来说较弱，虽然<code>gRPC</code>提供了基本的负载均衡、服务注册和发现等功能，但是相对于<code>Dubbo</code>和<code>Spring Cloud</code>来说还需要进一步完善。</p>
+</li>
+<li>
+<p>不支持动态代理：相比于<code>Dubbo</code>和<code>Spring Cloud</code>，<code>gRPC</code>不支持动态代理，因此在使用<code>gRPC</code>时需要手动生成客户端和服务端的<code>Stub</code>代码，增加了一定的开发和维护成本。</p>
+</li>
+<li>
+<p>不支持<code>RESTful</code>风格：<code>gRPC</code>是一种基于<code>RPC</code>的通信框架，不支持<code>RESTful</code>风格的<code>API</code>设计，相对于<code>Dubbo</code>和<code>Spring Cloud</code>来说，对于一些<code>API</code>设计要求较高的应用场景可能会存在一定的不足。</p>
+<p><a href="https://doc.oschina.net/grpc?t=58008" target="_blank" rel="noopener noreffer "><code>gRPC</code>快速入门</a></p>
+</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-05-14</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" data-title="GRPC简介" data-hashtags="技术分享,RPC,gRPC"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" data-hashtag="技术分享"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" data-title="GRPC简介"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" data-title="GRPC简介"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/" data-title="GRPC简介"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>,&nbsp;<a href="/tags/rpc/">RPC</a>,&nbsp;<a href="/tags/grpc/">gRPC</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/odin%E4%BD%8E%E4%BB%A3%E7%A0%81%E5%B9%B3%E5%8F%B0%E6%96%87%E6%A1%A3/" class="prev" rel="prev" title="Odin低代码平台文档"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Odin低代码平台文档</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.90.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2021 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

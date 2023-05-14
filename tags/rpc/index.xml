@@ -3,7 +3,15 @@
         <title>RPC - 标签 - 不洗碗工作室公共博客</title>
         <link>http://example.org/tags/rpc/</link>
         <description>RPC - 标签 - 不洗碗工作室公共博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/rpc/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 14 May 2023 14:41:44 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/rpc/" rel="self" type="application/rss+xml" /><item>
+    <title>GRPC简介</title>
+    <link>http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/</link>
+    <pubDate>Sun, 14 May 2023 14:41:44 &#43;0800</pubDate>
+    <author>姜如潇</author>
+    <guid>http://example.org/posts/grpc%E7%AE%80%E4%BB%8B/</guid>
+    <description><![CDATA[1. 计算机通信协议 根据OSI(Open System Interconnection)参考模型，计算机或通信系统间互联的标准体系有七层： 1.物理层：将数据转]]></description>
+</item>
+<item>
     <title>RPC远程过程调用</title>
     <link>http://example.org/posts/rpc%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/</link>
     <pubDate>Sun, 06 Mar 2022 18:40:55 &#43;0800</pubDate>
