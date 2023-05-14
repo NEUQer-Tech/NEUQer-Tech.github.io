@@ -101,22 +101,22 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="%5cimages%5c1.jpg"
-        data-srcset="%5cimages%5c1.jpg, %5cimages%5c1.jpg 1.5x, %5cimages%5c1.jpg 2x"
+        data-src="/images/1.jpg"
+        data-srcset="/images/1.jpg, /images/1.jpg 1.5x, /images/1.jpg 2x"
         data-sizes="auto"
-        alt="\images\1.jpg"
-        title="\images\1.jpg" /></p>
+        alt="/images/1.jpg"
+        title="/images/1.jpg" /></p>
 <p>这其中消息头可以包含多种信息，例如完整的包长度、消息体是否被压缩过、消息体格式等等，只要通信体系的上下游均约定好特定的消息头，就可以实现互认，这也就是所谓的协议。也正是由此，基于<code>TCP</code>衍生出众多协议，其中就包含多种<code>RPC</code>协议。</p>
 <p>准确来说，<code>RPC</code>(远程过程调用，<code>Remote Procedure Call</code>)本身并不是一个具体的协议，而是一种调用方式，它可以帮助我们调用远程计算机上某个服务的方法，使得调用远程方法与调用本地方法一样简单。举例而言，如果有两个不同的服务<code>A</code>、<code>B</code>，它们分别部署在不同的机器上，此时若要在服务<code>A</code>中调用服务<code>B</code>中的某个方法，就可以使用<code>RPC</code>。</p>
 <p><code>RPC</code>的原理图如下：</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="%5cimages%5c2.jpg"
-        data-srcset="%5cimages%5c2.jpg, %5cimages%5c2.jpg 1.5x, %5cimages%5c2.jpg 2x"
+        data-src="/images/2.jpg"
+        data-srcset="/images/2.jpg, /images/2.jpg 1.5x, /images/2.jpg 2x"
         data-sizes="auto"
-        alt="\images\2.jpg"
-        title="\images\2.jpg" /></p>
+        alt="/images/2.jpg"
+        title="/images/2.jpg" /></p>
 <p>我们可以将整个框架看作五个主要部分：</p>
 <p>1.客户端(服务消费端，<code>client</code>)：调用远程方法的一段。</p>
 <p>2.客户端桩(<code>client stub</code>)：其实就是一个代理类，可以把客户端调用的方法、类、方法参数等信息传递到服务端。</p>
@@ -155,11 +155,11 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="%5cimages%5c4.png"
-        data-srcset="%5cimages%5c4.png, %5cimages%5c4.png 1.5x, %5cimages%5c4.png 2x"
+        data-src="/images/4.png"
+        data-srcset="/images/4.png, /images/4.png 1.5x, /images/4.png 2x"
         data-sizes="auto"
-        alt="\images\4.png"
-        title="\images\4.png" /></p>
+        alt="/images/4.png"
+        title="/images/4.png" /></p>
 <p>可以看出二者的内容差异并不大，但是<code>ProtoBuf</code>的编码内容只是提供给操作者阅读的，实际传输的并不是以这种文本形式，而是序列化后的二进制数据，字节数会比<code>JSON</code>于<code>XML</code>的字节数少的多，速率更快。</p>
 <p>与采用文本格式的<code>JSON</code>相比，采用二进制格式的<code>ProtoBuf</code>在速度上可以达到前者的5倍。</p>
 <p>基于<code>ProtoBuf</code>，可以得到<code>gRPC</code>开发的核心：<code>.proto</code>文件，它定义了<code>gRPC</code>服务和消息的约定。根据这个文件，<code>gRPC</code>框架可以生成服务基类，消息以及完整的客户端代码。</p>
@@ -170,11 +170,11 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="%5cimages%5c3.png"
-        data-srcset="%5cimages%5c3.png, %5cimages%5c3.png 1.5x, %5cimages%5c3.png 2x"
+        data-src="/images/3.png"
+        data-srcset="/images/3.png, /images/3.png 1.5x, /images/3.png 2x"
         data-sizes="auto"
-        alt="\images\3.png"
-        title="\images\3.png" /></p>
+        alt="/images/3.png"
+        title="/images/3.png" /></p>
 <p>1.客户端中的<code>gRPC</code>桩(<code>gRPC Stub</code>)调用一个方法<code>A</code>，发起<code>RPC</code>调用请求。</p>
 <p>2.<code>gPRC</code>桩对请求信息使用<code>ProtoBuf</code>进行对象序列化压缩(<code>IDL</code>)，得到<code>Proto Request</code>。</p>
 <p>3.<code>gRPC</code>服务端(<code>gRPC Server</code>)接收到请求后，解码请求体，进行业务逻辑处理并返回。</p>
